@@ -1,0 +1,2301 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Module 1 · Dev Foundations</title>
+<meta name="description" content="Module 1 — Markdown & VS Code, CLI & Commands, Git: general concepts, key points, common and rare commands, full flows and scenarios.">
+<script>document.documentElement.classList.add('js')</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#02051c; --navy:#00105B; --mint:#98E8DE; --cream:#FFECCB;
+  --purple:#A66CFF; --violet:#6C2BD9; --pink:#FF6B9A; --sky:#7DA8FF;
+  --text:#DADDF6; --soft:#BCC0E3; --muted:#8C92C4;
+  --line:rgba(152,232,222,.13);
+  --top:68px;
+  --font-h:'Space Grotesk',system-ui,sans-serif;
+  --font-b:'Inter',system-ui,-apple-system,Segoe UI,sans-serif;
+  --font-m:'JetBrains Mono',ui-monospace,Consolas,monospace;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:150px}
+body{margin:0;background:var(--bg);color:var(--text);font:15.5px/1.65 var(--font-b);-webkit-font-smoothing:antialiased;overflow-x:hidden}
+body::before{content:"";position:fixed;inset:0;z-index:-2;pointer-events:none;
+  background:
+   radial-gradient(900px 620px at 8% -8%,rgba(166,108,255,.30),transparent 60%),
+   radial-gradient(760px 560px at 105% 18%,rgba(152,232,222,.13),transparent 60%),
+   radial-gradient(1100px 700px at 50% 115%,rgba(0,16,91,.95),transparent 70%),
+   linear-gradient(180deg,#02051c 0%,#03093a 55%,#02051c 100%)}
+body::after{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;opacity:.5;
+  background-image:
+   radial-gradient(1px 1px at 23px 41px,#fff,transparent),
+   radial-gradient(1px 1px at 141px 97px,rgba(152,232,222,.9),transparent),
+   radial-gradient(1.5px 1.5px at 260px 210px,rgba(255,236,203,.8),transparent),
+   radial-gradient(1px 1px at 330px 60px,#fff,transparent),
+   radial-gradient(1px 1px at 77px 300px,rgba(166,108,255,.9),transparent),
+   radial-gradient(1px 1px at 380px 340px,#fff,transparent);
+  background-size:420px 420px}
+::selection{background:rgba(166,108,255,.45);color:#fff}
+a{color:var(--mint)}
+:not(pre)>code{font-family:var(--font-m);font-size:.86em;color:var(--mint);background:rgba(152,232,222,.08);border:1px solid rgba(152,232,222,.16);padding:1px 6px;border-radius:6px;white-space:nowrap}
+
+/* ---------- top bar ---------- */
+.topbar{position:sticky;top:0;z-index:60;background:rgba(2,5,28,.74);backdrop-filter:blur(16px) saturate(140%);-webkit-backdrop-filter:blur(16px) saturate(140%);border-bottom:1px solid var(--line)}
+.topbar-in{max-width:1240px;margin:0 auto;padding:0 20px;height:var(--top);display:flex;align-items:center;gap:16px}
+.brand{display:flex;gap:11px;align-items:center;text-decoration:none;color:var(--cream);flex:none}
+.logo{width:38px;height:38px;border-radius:11px;display:grid;place-items:center;font:700 14px var(--font-h);color:#02051c;background:linear-gradient(135deg,var(--mint),var(--purple));box-shadow:0 0 24px rgba(166,108,255,.6)}
+.brand-t{font:600 15px/1.15 var(--font-h)}
+.brand-t small{display:block;color:var(--muted);font:600 10.5px var(--font-b);letter-spacing:.12em;text-transform:uppercase}
+.tabs{display:flex;gap:4px;margin:0 auto;padding:4px;border:1px solid var(--line);border-radius:14px;background:rgba(0,16,91,.35);overflow-x:auto;scrollbar-width:none;max-width:100%}
+.tabs::-webkit-scrollbar{display:none}
+.tab{display:flex;flex-direction:column;padding:6px 16px;border-radius:10px;text-decoration:none;color:var(--muted);white-space:nowrap;transition:background .25s,box-shadow .25s;line-height:1.3}
+.tab b{font:600 13px var(--font-h);color:var(--text)}
+.tab span{font-size:11.5px}
+.tab:hover{background:rgba(152,232,222,.07)}
+.tab.active{background:linear-gradient(135deg,rgba(166,108,255,.34),rgba(152,232,222,.12));box-shadow:inset 0 0 0 1px rgba(166,108,255,.6),0 0 26px rgba(166,108,255,.28)}
+.tab.active b{color:var(--cream)} .tab.active span{color:var(--mint)}
+.tab.soon span{opacity:.75}
+.os{display:flex;border:1px solid var(--line);border-radius:10px;overflow:hidden;flex:none}
+.os button{background:none;border:0;color:var(--muted);padding:7px 11px;font:600 12px var(--font-h);cursor:pointer}
+.os button.on{background:rgba(152,232,222,.15);color:var(--mint)}
+.progress{position:absolute;left:0;bottom:-1px;height:2px;width:0;background:linear-gradient(90deg,var(--mint),var(--purple));box-shadow:0 0 12px var(--purple)}
+@media(max-width:900px){.brand-t{display:none}.tab span{display:none}.tab{padding:9px 13px}}
+@media(max-width:480px){.topbar-in{padding:0 12px;gap:8px}.tab{padding:9px 10px}.os button{padding:7px 8px}.logo{width:34px;height:34px}}
+
+/* ---------- layout ---------- */
+main{max-width:1240px;margin:0 auto;padding:0 20px 90px}
+@media(max-width:600px){main{padding:0 16px 70px}}
+.day[hidden]{display:none}
+.hero{display:grid;grid-template-columns:1.05fr 1fr;gap:40px;align-items:center;padding:58px 0 34px}
+@media(max-width:920px){.hero{grid-template-columns:1fr;gap:20px;padding-top:36px}}
+.eyebrow{display:inline-flex;align-items:center;gap:9px;font:600 12px var(--font-h);letter-spacing:.17em;text-transform:uppercase;color:var(--mint);padding:6px 13px;border:1px solid rgba(152,232,222,.3);border-radius:99px;background:rgba(152,232,222,.06)}
+.eyebrow .dot{width:7px;height:7px;border-radius:50%;background:var(--mint);box-shadow:0 0 10px var(--mint);animation:pulse 2s infinite}
+h1{font:700 clamp(38px,6vw,70px)/1.02 var(--font-h);letter-spacing:-.035em;color:var(--cream);margin:18px 0 16px}
+.grad{background:linear-gradient(100deg,var(--mint),var(--purple) 60%,#E3C2FF);-webkit-background-clip:text;background-clip:text;color:transparent}
+.lead{font-size:17.5px;color:#C3C7EA;max-width:580px;margin:0}
+.chips{display:flex;flex-wrap:wrap;gap:9px;margin-top:22px}
+.chips span{font:500 12.5px var(--font-m);color:var(--cream);padding:6px 11px;border-radius:9px;border:1px solid rgba(255,236,203,.18);background:rgba(255,236,203,.05)}
+.hero-art svg{width:100%;height:auto;display:block;filter:drop-shadow(0 34px 60px rgba(108,43,217,.38))}
+
+.subnav{position:sticky;top:var(--top);z-index:50;margin:8px -20px 0;padding:10px 20px;display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;background:linear-gradient(180deg,rgba(2,5,28,.94),rgba(2,5,28,.8));backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
+.subnav::-webkit-scrollbar{display:none}
+@media(max-width:600px){.subnav{margin:8px -16px 0;padding:10px 16px}}
+.subnav a{flex:none;font:500 13px var(--font-h);color:var(--muted);text-decoration:none;padding:7px 13px;border-radius:99px;border:1px solid transparent;transition:.2s}
+.subnav a:hover{color:var(--text);border-color:var(--line)}
+.subnav a.on{color:#02051c;background:var(--mint);box-shadow:0 0 18px rgba(152,232,222,.45)}
+
+.sec{padding:74px 0 4px}
+.sec-head{max-width:780px;margin-bottom:28px}
+.kicker{font:600 12px var(--font-m);letter-spacing:.16em;color:var(--purple);text-transform:uppercase}
+.kicker b{color:var(--mint);font-weight:700}
+h2{font:700 clamp(28px,3.6vw,42px)/1.08 var(--font-h);color:var(--cream);margin:8px 0 10px;letter-spacing:-.025em}
+h3.sub{font:600 20px var(--font-h);color:var(--cream);margin:34px 0 14px;display:flex;align-items:center;gap:10px}
+.sec-head p{color:#B8BCE0;margin:0;font-size:16.5px}
+.chapter{display:flex;align-items:center;gap:16px;margin:90px 0 -30px;font:600 12px var(--font-m);letter-spacing:.24em;color:var(--muted);text-transform:uppercase}
+.chapter::before,.chapter::after{content:"";flex:1;height:1px;background:linear-gradient(90deg,transparent,rgba(166,108,255,.5),transparent)}
+
+/* reveal */
+.js .rv{opacity:0;transform:translateY(18px);transition:opacity .7s ease,transform .7s ease}
+.js .rv.in{opacity:1;transform:none}
+
+/* ---------- components ---------- */
+.grid{display:grid;gap:16px}
+.g2{grid-template-columns:repeat(auto-fit,minmax(min(100%,420px),1fr))}
+.g3{grid-template-columns:repeat(auto-fill,minmax(min(100%,310px),1fr))}
+.g4{grid-template-columns:repeat(auto-fill,minmax(min(100%,250px),1fr))}
+.card{position:relative;background:linear-gradient(180deg,rgba(10,22,100,.55),rgba(4,9,48,.68));border:1px solid var(--line);border-radius:18px;padding:22px;overflow:hidden;transition:transform .3s,border-color .3s,box-shadow .3s,opacity .7s}
+.card:hover{transform:translateY(-3px);border-color:rgba(166,108,255,.45);box-shadow:0 22px 50px -22px rgba(108,43,217,.6)}
+.card h3{font:600 21px var(--font-h);color:var(--cream);margin:0 0 6px}
+.card h4{font:600 16.5px/1.3 var(--font-h);color:var(--cream);margin:0 0 6px}
+.card p{margin:0;color:var(--soft);font-size:14.5px}
+.card .top{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;margin-bottom:6px}
+.card .top h4{margin:0}
+.card.big{padding:28px}
+.card.big::after{content:"";position:absolute;right:-60px;top:-60px;width:200px;height:200px;border-radius:50%;background:radial-gradient(circle,rgba(166,108,255,.28),transparent 70%);pointer-events:none}
+.ico{width:46px;height:46px;border-radius:14px;display:grid;place-items:center;margin-bottom:14px;background:linear-gradient(135deg,rgba(152,232,222,.18),rgba(166,108,255,.22));border:1px solid rgba(152,232,222,.25);color:var(--mint)}
+.ico svg{width:24px;height:24px}
+.cmd{font:600 14.5px var(--font-m);color:var(--mint);display:block;margin-bottom:6px;word-break:break-word}
+
+.pill{display:inline-flex;align-items:center;flex:none;font:700 10px var(--font-m);letter-spacing:.09em;text-transform:uppercase;padding:3px 8px;border-radius:6px;border:1px solid;white-space:nowrap}
+.p-common{color:var(--mint);background:rgba(152,232,222,.08);border-color:rgba(152,232,222,.3)}
+.p-rare{color:var(--purple);background:rgba(166,108,255,.1);border-color:rgba(166,108,255,.4)}
+.p-care{color:var(--cream);background:rgba(255,236,203,.07);border-color:rgba(255,236,203,.3)}
+.p-danger{color:var(--pink);background:rgba(255,107,154,.08);border-color:rgba(255,107,154,.4)}
+.p-safe{color:#7CF0B5;background:rgba(124,240,181,.07);border-color:rgba(124,240,181,.35)}
+
+.points{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,340px),1fr));gap:14px;counter-reset:pt}
+.point{counter-increment:pt;display:flex;gap:16px;padding:20px;border-radius:16px;border:1px solid var(--line);background:rgba(4,10,52,.62)}
+.point::before{content:counter(pt,decimal-leading-zero);font:700 26px/1 var(--font-h);background:linear-gradient(180deg,var(--mint),var(--purple));-webkit-background-clip:text;background-clip:text;color:transparent;flex:none}
+.point h4{margin:0 0 4px;font:600 16px var(--font-h);color:var(--cream)}
+.point p{margin:0;color:var(--soft);font-size:14.5px}
+
+.callout{display:flex;gap:14px;padding:16px 18px;border-radius:14px;border:1px solid;margin-top:16px;font-size:14.5px;color:#CDD0EE}
+.callout .ci{flex:none;width:26px;height:26px;border-radius:8px;display:grid;place-items:center;font:700 14px var(--font-h)}
+.callout b{color:var(--cream)}
+.tip{border-color:rgba(152,232,222,.3);background:rgba(152,232,222,.06)} .tip .ci{background:var(--mint);color:#02051c}
+.warn{border-color:rgba(255,236,203,.3);background:rgba(255,236,203,.05)} .warn .ci{background:var(--cream);color:#02051c}
+.danger{border-color:rgba(255,107,154,.38);background:rgba(255,107,154,.07)} .danger .ci{background:var(--pink);color:#02051c}
+
+/* code window */
+.cw{margin-top:12px;border-radius:12px;border:1px solid rgba(152,232,222,.16);background:#010417;overflow:hidden;text-align:left}
+.cw-bar{display:flex;align-items:center;gap:6px;padding:7px 10px;background:rgba(0,16,91,.55);border-bottom:1px solid var(--line)}
+.cw-bar i{width:9px;height:9px;border-radius:50%;background:#2a3170}
+.cw-bar i:nth-child(1){background:#FF6B9A99}.cw-bar i:nth-child(2){background:#FFECCB88}.cw-bar i:nth-child(3){background:#98E8DE88}
+.cw-bar span{font:500 11px var(--font-m);color:var(--muted);margin-left:6px;flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.copy{background:rgba(152,232,222,.08);border:1px solid rgba(152,232,222,.22);color:var(--mint);font:600 11px var(--font-m);padding:3px 9px;border-radius:6px;cursor:pointer;flex:none}
+.copy:hover{background:rgba(152,232,222,.18)}
+.copy.ok{background:var(--mint);color:#02051c}
+.cw pre{margin:0;padding:14px 16px;overflow-x:auto;font:13px/1.7 var(--font-m);color:#E6E8FF;tab-size:2}
+.t-k{color:var(--mint);font-weight:600}.t-f{color:#C59BFF}.t-s{color:var(--cream)}.t-p{color:#FFB38A;font-style:italic}
+.t-c{color:#6C74AC;font-style:italic}.t-h{color:var(--cream);font-weight:700}.t-m{color:#C59BFF}.t-b{color:#fff;font-weight:700}.t-l{color:var(--mint)}.t-q{color:#9EA4D6;font-style:italic}
+.x-l{display:inline-block;min-width:100%}
+.x-cur{background:rgba(152,232,222,.1)}.x-inc{background:rgba(166,108,255,.16)}.x-mk{color:var(--pink);font-weight:700}
+
+/* tables */
+.tbl-wrap{overflow-x:auto;border:1px solid var(--line);border-radius:16px;background:rgba(3,8,44,.65)}
+table{width:100%;border-collapse:collapse;min-width:680px;font-size:14px}
+th{text-align:left;font:600 11.5px var(--font-h);letter-spacing:.1em;text-transform:uppercase;color:var(--mint);padding:14px 16px;background:rgba(0,16,91,.6);border-bottom:1px solid var(--line);white-space:nowrap}
+td{padding:12px 16px;border-bottom:1px solid rgba(152,232,222,.07);vertical-align:top;color:#C9CCEC}
+tr:last-child td{border-bottom:0}
+tbody tr:hover td{background:rgba(166,108,255,.06)}
+td:first-child{color:var(--cream);font-weight:500}
+td code{white-space:nowrap}
+
+/* figures */
+.figure{margin:0;padding:24px;border-radius:22px;border:1px solid var(--line);background:radial-gradient(700px 320px at 50% 0%,rgba(166,108,255,.16),transparent 70%),rgba(3,8,44,.72)}
+.figure figcaption{margin-top:14px;color:var(--muted);font-size:13.5px;text-align:center}
+.svg-scroll{overflow-x:auto;scrollbar-width:thin}
+.svg-scroll svg{min-width:760px;width:100%;height:auto;display:block}
+.figure.split{display:grid;grid-template-columns:1.25fr 1fr;gap:26px;align-items:center}
+@media(max-width:900px){.figure.split{grid-template-columns:1fr}}
+.hero-art svg,.figure svg,.soon-wrap svg{font-family:var(--font-m)}
+.legend.cols{grid-template-columns:repeat(auto-fill,minmax(min(100%,300px),1fr));margin-top:22px}
+.js .card.rv.in:hover{transform:translateY(-3px)}
+.tabs{min-width:0}
+.md-pair{grid-template-rows:auto 1fr}
+.card{display:flex;flex-direction:column}
+.card>.ico{align-self:flex-start}
+.card>p:has(+.cw){margin-bottom:12px}
+.card>.cw:last-child{margin-top:auto}
+.points.four{grid-template-columns:repeat(auto-fill,minmax(min(100%,265px),1fr))}
+#day3 .scn-grid{grid-template-columns:repeat(auto-fill,minmax(min(100%,500px),1fr))}
+.scn .cw pre{white-space:pre-wrap;overflow-wrap:anywhere}
+.kb{flex-wrap:wrap}
+.kb .lbl{flex:1 1 150px;min-width:0}
+.keys{white-space:nowrap}
+.legend{list-style:none;margin:0;padding:0;display:grid;gap:12px;counter-reset:lg}
+.legend li{display:flex;gap:12px;font-size:14.5px;color:var(--soft)}
+.legend li b{color:var(--cream);display:block;font:600 15px var(--font-h)}
+.legend .n{flex:none;width:26px;height:26px;border-radius:50%;background:var(--mint);color:#02051c;display:grid;place-items:center;font:700 12px var(--font-h);box-shadow:0 0 14px rgba(152,232,222,.6)}
+
+/* markdown pairs */
+.md-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,540px),1fr));gap:16px}
+.md-pair{display:grid;grid-template-columns:1fr 1fr;border:1px solid var(--line);border-radius:16px;overflow:hidden;background:rgba(3,8,44,.65)}
+.md-pair>header{grid-column:1/-1;display:flex;justify-content:space-between;align-items:center;gap:10px;padding:12px 16px;border-bottom:1px solid var(--line);background:rgba(0,16,91,.35)}
+.md-pair>header h4{margin:0;font:600 15.5px var(--font-h);color:var(--cream)}
+.md-pair>header p{margin:2px 0 0;font-size:13px;color:var(--muted)}
+.md-pair .cw{margin:0;border:0;border-radius:0;border-right:1px solid var(--line)}
+.md-out{padding:14px 18px;font-size:14px;color:var(--text);position:relative}
+.md-out::before{content:"RESULT";display:block;font:700 9.5px var(--font-m);letter-spacing:.18em;color:var(--purple);margin-bottom:8px}
+.md-out h1{font:700 24px/1.2 var(--font-h);margin:0 0 6px;color:var(--cream);border-bottom:1px solid var(--line);padding-bottom:4px;letter-spacing:-.01em}
+.md-out h2{font:700 19px var(--font-h);margin:6px 0;color:var(--cream)}
+.md-out h3{font:600 16px var(--font-h);margin:6px 0;color:var(--cream)}
+.md-out p{margin:0 0 6px}
+.md-out ul,.md-out ol{margin:0;padding-left:20px}
+.md-out blockquote{border-left:3px solid var(--purple);margin:0;padding:6px 12px;color:#C3C7EA;background:rgba(166,108,255,.08);border-radius:0 8px 8px 0}
+.md-out table{min-width:0;font-size:13px}.md-out th,.md-out td{padding:6px 10px}
+.md-out hr{border:0;border-top:1px solid rgba(152,232,222,.3);margin:10px 0}
+.md-out pre{margin:6px 0 0;padding:8px 10px;border-radius:8px;background:#010417;font:12px var(--font-m);color:var(--cream)}
+.img-ph{height:86px;border-radius:10px;border:1px solid rgba(152,232,222,.25);background:linear-gradient(160deg,#0f1c78,#060c3c);position:relative;overflow:hidden}
+.img-ph::before{content:"";position:absolute;right:18px;top:14px;width:18px;height:18px;border-radius:50%;background:var(--cream)}
+.img-ph::after{content:"";position:absolute;left:0;right:0;bottom:0;height:50px;background:var(--purple);opacity:.6;clip-path:polygon(0 100%,25% 30%,45% 70%,65% 20%,100% 100%)}
+@media(max-width:600px){.md-pair{grid-template-columns:1fr}.md-pair .cw{border-right:0;border-bottom:1px solid var(--line)}}
+
+/* keyboard */
+.kb-list{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,330px),1fr));gap:10px}
+.kb{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:12px 14px;border-radius:12px;border:1px solid var(--line);background:rgba(4,10,52,.62)}
+.kb .lbl{font-size:14px;color:var(--soft)}
+.kb .lbl b{color:var(--cream);font-weight:600}
+.keys{flex:none;text-align:right}
+kbd{font:600 11.5px var(--font-m);color:var(--cream);background:linear-gradient(180deg,#1b2678,#0c1450);border:1px solid rgba(255,236,203,.22);border-bottom-width:3px;border-radius:7px;padding:2px 7px;min-width:22px;text-align:center;display:inline-block}
+.keys i{font-style:normal;color:var(--muted);margin:0 3px;font-size:11px}
+.keys em{font-style:normal;color:var(--muted);font-size:11px;margin:0 6px}
+
+/* steps */
+.steps{position:relative;display:grid;gap:14px;counter-reset:st}
+.steps::before{content:"";position:absolute;left:37px;top:24px;bottom:24px;width:2px;background:linear-gradient(var(--mint),var(--purple),transparent);opacity:.4}
+.step{position:relative;padding:18px 20px 18px 76px;border-radius:16px;border:1px solid var(--line);background:rgba(4,10,52,.7);counter-increment:st}
+.step::before{content:counter(st);position:absolute;left:20px;top:18px;width:36px;height:36px;border-radius:12px;display:grid;place-items:center;font:700 15px var(--font-h);color:#02051c;background:linear-gradient(135deg,var(--mint),var(--purple));box-shadow:0 0 18px rgba(166,108,255,.45)}
+.step h4{margin:0 0 3px;font:600 16.5px var(--font-h);color:var(--cream)}
+.step p{margin:0;color:var(--soft);font-size:14.5px}
+@media(max-width:560px){.step{padding:66px 18px 18px}.steps::before{display:none}}
+
+/* flow */
+.flow{display:flex;flex-wrap:wrap;align-items:center;gap:10px;padding:20px;border-radius:18px;border:1px dashed rgba(166,108,255,.4);background:rgba(166,108,255,.05)}
+.flow .node{padding:10px 14px;border-radius:12px;border:1px solid rgba(152,232,222,.3);background:rgba(2,5,28,.7);font:600 14px var(--font-h);color:var(--cream)}
+.flow .node small{display:block;font:500 11.5px var(--font-m);color:var(--mint);margin-top:2px}
+.flow .arr{color:var(--purple);font:700 20px var(--font-h);text-shadow:0 0 10px var(--purple)}
+.flow .loop{margin-left:auto;font:500 12px var(--font-m);color:var(--muted)}
+
+/* scenarios */
+.finder{margin-top:6px;padding:24px;border-radius:22px;border:1px solid rgba(166,108,255,.35);background:radial-gradient(600px 200px at 0% 0%,rgba(166,108,255,.2),transparent 70%),radial-gradient(500px 200px at 100% 100%,rgba(152,232,222,.12),transparent 70%),rgba(3,8,44,.75)}
+.finder h3{margin:0 0 4px;font:700 22px var(--font-h);color:var(--cream)}
+.finder p{margin:0 0 16px;color:var(--soft);font-size:14.5px}
+.search{position:relative}
+.search svg{position:absolute;left:15px;top:50%;transform:translateY(-50%);width:18px;height:18px;color:var(--muted)}
+.search input{width:100%;padding:14px 16px 14px 44px;border-radius:12px;border:1px solid var(--line);background:#010417;color:var(--text);font:15px var(--font-b);outline:none;transition:.2s}
+.search input:focus{border-color:var(--purple);box-shadow:0 0 0 4px rgba(166,108,255,.18)}
+.catchips{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
+.catchips a{display:inline-flex;align-items:center;gap:8px;text-decoration:none;font:600 13px var(--font-h);color:var(--text);padding:7px 12px;border-radius:10px;border:1px solid var(--line);background:rgba(2,5,28,.6)}
+.catchips a:hover{border-color:rgba(166,108,255,.5)}
+.catchips b{font:700 11px var(--font-m);padding:1px 7px;border-radius:6px;background:rgba(152,232,222,.15);color:var(--mint)}
+.found{margin-top:12px;font:500 12.5px var(--font-m);color:var(--muted)}
+.scn-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,390px),1fr));gap:14px;margin-top:18px}
+.scn{border-radius:16px;border:1px solid var(--line);background:linear-gradient(180deg,rgba(10,22,100,.45),rgba(3,8,44,.75));padding:18px;display:flex;flex-direction:column;gap:6px;min-width:0;transition:border-color .3s,opacity .7s,transform .7s}
+.scn:hover{border-color:rgba(166,108,255,.45)}
+.scn[hidden]{display:none}
+.scn header{display:flex;gap:10px;align-items:flex-start}
+.scn-id{font:700 11px var(--font-m);color:#02051c;background:var(--mint);padding:3px 7px;border-radius:6px;flex:none;margin-top:2px}
+.scn[data-cat=undo] .scn-id{background:var(--purple)}
+.scn[data-cat=team] .scn-id{background:var(--cream)}
+.scn[data-cat=conflict] .scn-id{background:var(--pink)}
+.scn[data-cat=trouble] .scn-id{background:var(--sky)}
+.scn h4{margin:0;font:600 16px/1.35 var(--font-h);color:var(--cream);flex:1}
+.scn-w{margin:0;color:#B8BCE0;font-size:14px}
+.scn-n{font-size:13.5px;margin:8px 0 0;padding:10px 12px;border-radius:10px;background:rgba(152,232,222,.06);border-left:3px solid var(--mint);color:#C9CCEC}
+.scn-n.warn{border-color:var(--cream);background:rgba(255,236,203,.05)}
+.scn-n.danger{border-color:var(--pink);background:rgba(255,107,154,.07)}
+.empty{display:none;padding:18px;border-radius:14px;border:1px dashed var(--line);color:var(--muted);text-align:center;font-size:14px;margin-top:14px}
+.empty.show{display:block}
+
+/* reset modes visual */
+.modes{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:14px}
+.mode{padding:20px;border-radius:18px;border:1px solid var(--line);background:rgba(4,10,52,.65)}
+.mode h4{margin:0 0 4px;font:700 18px var(--font-m);color:var(--cream)}
+.mode p{margin:0 0 14px;color:var(--soft);font-size:14px}
+.zones{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
+.zones div{border-radius:10px;padding:10px 8px;text-align:center;font:600 11px var(--font-m);border:1px solid}
+.zones small{display:block;font:500 10px var(--font-b);opacity:.85;margin-top:3px}
+.z-keep{color:#7CF0B5;border-color:rgba(124,240,181,.35);background:rgba(124,240,181,.07)}
+.z-move{color:var(--cream);border-color:rgba(255,236,203,.35);background:rgba(255,236,203,.06)}
+.z-lose{color:var(--pink);border-color:rgba(255,107,154,.45);background:rgba(255,107,154,.09)}
+
+/* vscode conflict buttons */
+.vsbar{display:flex;flex-wrap:wrap;gap:4px 14px;padding:8px 14px;font:500 12px var(--font-b);color:var(--muted);border-bottom:1px solid var(--line);background:#050b33}
+.vsbar span{color:#B9A4FF;cursor:default}
+.vsbar span:hover{text-decoration:underline}
+
+/* coming soon */
+.soon-wrap{min-height:calc(100vh - 140px);display:grid;place-items:center;text-align:center;padding:40px 0}
+.soon-wrap svg{width:min(360px,80vw);height:auto;filter:drop-shadow(0 0 60px rgba(166,108,255,.45))}
+.soon-wrap h1{margin-top:10px}
+.soon-wrap .lead{margin:0 auto}
+
+footer{border-top:1px solid var(--line);padding:30px 20px;text-align:center;color:var(--muted);font-size:13px}
+.totop{position:fixed;right:18px;bottom:18px;z-index:70;width:46px;height:46px;border-radius:14px;border:1px solid rgba(166,108,255,.5);background:rgba(2,5,28,.85);color:var(--mint);display:grid;place-items:center;cursor:pointer;opacity:0;pointer-events:none;transition:.3s;box-shadow:0 0 22px rgba(166,108,255,.35)}
+.totop.show{opacity:1;pointer-events:auto}
+
+/* svg animation */
+@keyframes pulse{50%{opacity:.35}}
+@keyframes floatY{50%{transform:translateY(-9px)}}
+@keyframes dash{to{stroke-dashoffset:-140}}
+@keyframes blink{50%{opacity:0}}
+@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes twinkle{50%{opacity:.15}}
+.float-a{animation:floatY 7s ease-in-out infinite}
+.float-b{animation:floatY 7s ease-in-out -3.5s infinite}
+.dash{animation:dash 3.2s linear infinite}
+.blink{animation:blink 1.05s steps(1) infinite}
+.tw{animation:twinkle 3s ease-in-out infinite}
+.tw:nth-child(2n){animation-delay:-1.2s}.tw:nth-child(3n){animation-delay:-2.1s}
+.spin{transform-origin:200px 200px;animation:spin 40s linear infinite}
+.spin-r{transform-origin:200px 200px;animation:spin 26s linear infinite reverse}
+.ping{animation:pulse 2.4s ease-in-out infinite}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}.js .rv{opacity:1;transform:none}html{scroll-behavior:auto}}
+</style>
+</head>
+<body>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs><filter id="glow" filterUnits="userSpaceOnUse" x="-1000" y="-1000" width="4000" height="4000"><feGaussianBlur stdDeviation="5" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs>
+  <symbol id="i-doc" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5M9 13h6M9 17h4"/></symbol>
+  <symbol id="i-code" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m8 7-5 5 5 5M16 7l5 5-5 5M13.5 4l-3 16"/></symbol>
+  <symbol id="i-term" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="3"/><path d="m7 9 3 3-3 3M13 15h4"/></symbol>
+  <symbol id="i-branch" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="6" cy="5" r="2.2"/><circle cx="6" cy="19" r="2.2"/><circle cx="18" cy="8" r="2.2"/><path d="M6 7.2v9.6M18 10.2c0 4-6 3-11 6.8"/></symbol>
+  <symbol id="i-cloud" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M7 18a5 5 0 0 1-.6-9.96A6 6 0 0 1 18 9a4.5 4.5 0 0 1-.5 9z"/></symbol>
+  <symbol id="i-search" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></symbol>
+  <symbol id="i-up" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 14 6-6 6 6"/></symbol>
+  <symbol id="i-shield" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 4 6v6c0 5 3.5 8 8 9 4.5-1 8-4 8-9V6z"/><path d="m9 12 2 2 4-4"/></symbol>
+  <symbol id="i-users" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="3.2"/><path d="M3 20c0-3.3 2.7-6 6-6s6 2.7 6 6"/><circle cx="17" cy="9" r="2.6"/><path d="M16 14.2c2.9.3 5 2.7 5 5.8"/></symbol>
+  <symbol id="i-history" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5M12 7v5l3 3"/></symbol>
+</svg>
+
+<header class="topbar">
+  <div class="topbar-in">
+    <a class="brand" href="#day1"><span class="logo">M1</span><span class="brand-t">Module 1<small>Dev Foundations</small></span></a>
+    <nav class="tabs" aria-label="Days">
+      <a class="tab" href="#day1" data-day="1"><b>Day 1</b><span>Markdown &amp; VS Code</span></a>
+      <a class="tab" href="#day2" data-day="2"><b>Day 2</b><span>CLI &amp; Commands</span></a>
+      <a class="tab" href="#day3" data-day="3"><b>Day 3</b><span>Git</span></a>
+      <a class="tab soon" href="#day4" data-day="4"><b>Day 4</b><span>Coming soon</span></a>
+    </nav>
+    <div class="os" role="group" aria-label="Keyboard layout"><button data-os="win" class="on">Win</button><button data-os="mac">Mac</button></div>
+  </div>
+  <div class="progress" id="progress"></div>
+</header>
+
+<main>
+<!-- ================================================================ DAY 1 -->
+<section class="day" id="day1" data-day="1">
+  <div class="hero">
+    <div>
+      <div class="eyebrow"><span class="dot"></span>Day 01 · Write &amp; Edit</div>
+      <h1>Markdown <span style="color:var(--muted)">&amp;</span><br><span class="grad">VS Code</span></h1>
+      <p class="lead">Markdown turns plain text into clean, formatted documents. VS Code is the editor where you will write, run, and ship almost everything in this course.</p>
+      <div class="chips"><span>11 core syntaxes</span><span>12 rare tricks</span><span>30 shortcuts</span><span>8 extensions</span></div>
+    </div>
+    <div class="hero-art">
+      <svg viewBox="0 0 520 400" role="img" aria-label="Raw Markdown text beamed through a prism into a rendered document">
+        <defs>
+          <radialGradient id="d1halo"><stop offset="0" stop-color="#A66CFF" stop-opacity=".5"/><stop offset="1" stop-color="#A66CFF" stop-opacity="0"/></radialGradient>
+          <linearGradient id="d1beam" x1="0" x2="1"><stop offset="0" stop-color="#98E8DE"/><stop offset="1" stop-color="#A66CFF"/></linearGradient>
+          <linearGradient id="d1card" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#101f7c"/><stop offset="1" stop-color="#060c3c"/></linearGradient>
+          <clipPath id="d1img"><rect x="318" y="232" width="160" height="88" rx="10"/></clipPath>
+        </defs>
+        <circle cx="260" cy="200" r="195" fill="url(#d1halo)"/>
+        <g fill="#fff"><circle class="tw" cx="40" cy="40" r="1.5"/><circle class="tw" cx="480" cy="30" r="1.2"/><circle class="tw" cx="500" cy="360" r="1.6"/><circle class="tw" cx="20" cy="340" r="1.2"/><circle class="tw" cx="260" cy="20" r="1.4"/><circle class="tw" cx="270" cy="380" r="1"/></g>
+        <ellipse cx="260" cy="372" rx="230" ry="14" fill="#98E8DE" opacity=".07"/>
+        <g class="float-a">
+          <rect x="30" y="72" width="192" height="252" rx="14" fill="#040a35" stroke="#98E8DE" stroke-opacity=".4"/>
+          <circle cx="48" cy="90" r="4" fill="#FF6B9A"/><circle cx="62" cy="90" r="4" fill="#FFECCB"/><circle cx="76" cy="90" r="4" fill="#98E8DE"/>
+          <text x="208" y="94" text-anchor="end" font-size="10" fill="#8C92C4">README.md</text>
+          <g font-size="12.5">
+            <text x="46" y="126" fill="#C59BFF"># <tspan fill="#FFECCB" font-weight="700">Hello RevoU</tspan></text>
+            <text x="46" y="150" fill="#C59BFF">## <tspan fill="#DADDF6">About me</tspan></text>
+            <text x="46" y="174" fill="#DADDF6">I love <tspan fill="#98E8DE">**code**</tspan></text>
+            <text x="46" y="198" fill="#98E8DE">- <tspan fill="#DADDF6">Markdown</tspan></text>
+            <text x="46" y="218" fill="#98E8DE">- <tspan fill="#DADDF6">VS Code</tspan></text>
+            <text x="46" y="242" fill="#FFECCB">[GitHub](url)</text>
+            <text x="46" y="266" fill="#8C92C4">![photo](me.png)</text>
+            <text x="46" y="296" fill="#C59BFF">&gt; <tspan fill="#9EA4D6" font-style="italic">ship it</tspan></text>
+          </g>
+        </g>
+        <path d="M224 198 H300" stroke="url(#d1beam)" stroke-width="3" stroke-dasharray="7 9" class="dash" filter="url(#glow)" fill="none"/>
+        <g filter="url(#glow)"><polygon points="262,170 288,198 262,226 236,198" fill="#0a1450" stroke="#98E8DE" stroke-width="1.6"/><polygon points="262,182 276,198 262,214 248,198" fill="#98E8DE" opacity=".85"/></g>
+        <g class="float-b">
+          <rect x="300" y="52" width="196" height="288" rx="16" fill="url(#d1card)" stroke="#A66CFF" stroke-opacity=".6"/>
+          <text x="318" y="94" font-family="Space Grotesk" font-weight="700" font-size="23" fill="#FFECCB">Hello RevoU</text>
+          <rect x="318" y="103" width="160" height="1.5" fill="#FFECCB" opacity=".25"/>
+          <text x="318" y="128" font-family="Space Grotesk" font-weight="600" font-size="15" fill="#98E8DE">About me</text>
+          <text x="318" y="150" font-family="Inter" font-size="12.5" fill="#DADDF6">I love <tspan font-weight="700" fill="#fff">code</tspan></text>
+          <circle cx="323" cy="168" r="2.6" fill="#98E8DE"/><text x="333" y="172" font-family="Inter" font-size="12.5" fill="#DADDF6">Markdown</text>
+          <circle cx="323" cy="188" r="2.6" fill="#98E8DE"/><text x="333" y="192" font-family="Inter" font-size="12.5" fill="#DADDF6">VS Code</text>
+          <text x="318" y="216" font-family="Inter" font-size="12.5" fill="#98E8DE" text-decoration="underline">GitHub</text>
+          <g clip-path="url(#d1img)"><rect x="318" y="232" width="160" height="88" fill="#0b1660"/><circle cx="452" cy="256" r="10" fill="#FFECCB"/><path d="M318 320 L362 268 L392 298 L424 262 L478 320 Z" fill="#A66CFF" opacity=".65"/></g>
+          <rect x="318" y="232" width="160" height="88" rx="10" fill="none" stroke="#98E8DE" stroke-opacity=".3"/>
+        </g>
+        <text x="126" y="352" text-anchor="middle" font-size="10.5" letter-spacing="3" fill="#98E8DE">RAW .MD</text>
+        <text x="398" y="366" text-anchor="middle" font-size="10.5" letter-spacing="3" fill="#C59BFF">RENDERED</text>
+      </svg>
+    </div>
+  </div>
+
+  <nav class="subnav">
+    <a href="#d1-big">Big Picture</a><a href="#d1-key">Key Points</a><a href="#d1-md">Markdown Syntax</a><a href="#d1-mdrare">Rare Markdown</a><a href="#d1-readme">README Flow</a><a href="#d1-ui">VS Code Anatomy</a><a href="#d1-keys">Shortcuts</a><a href="#d1-ext">Extensions</a><a href="#d1-gems">Hidden Gems</a>
+  </nav>
+
+  <section class="sec" id="d1-big">
+    <div class="sec-head"><div class="kicker"><b>01</b> — General explanation</div><h2>The big picture</h2><p>Two tools you will touch every single day as a developer.</p></div>
+    <div class="grid g2">
+      <article class="card big"><div class="ico"><svg><use href="#i-doc"/></svg></div><h3>Markdown</h3><p>A lightweight markup language that formats text with simple symbols like <code>#</code>, <code>*</code>, and <code>-</code>. It powers READMEs, documentation, notes, and chat apps like GitHub, Notion, and Discord.</p></article>
+      <article class="card big"><div class="ico"><svg><use href="#i-code"/></svg></div><h3>Visual Studio Code</h3><p>A free, fast, and extensible code editor by Microsoft for Windows, macOS, and Linux. Extensions turn it into a full workstation for any language, with a built-in terminal and Git.</p></article>
+    </div>
+    <div class="callout tip"><span class="ci">i</span><div><b>Why together?</b> You write Markdown inside VS Code, preview it live, and push it to GitHub where it renders automatically as your project's front page.</div></div>
+  </section>
+
+  <section class="sec" id="d1-key">
+    <div class="sec-head"><div class="kicker"><b>02</b> — Important points</div><h2>Key points to remember</h2></div>
+    <div class="points">
+      <div class="point"><div><h4>Files end with <code>.md</code></h4><p>Any <code>README.md</code> in a repo is rendered automatically on GitHub as the project's homepage.</p></div></div>
+      <div class="point"><div><h4>Plain text is future-proof</h4><p>It opens in any editor and shows clean line-by-line diffs in Git.</p></div></div>
+      <div class="point"><div><h4>Blank lines matter</h4><p>Separate paragraphs, lists, and headings with an empty line. Missing blank lines are the #1 cause of broken rendering.</p></div></div>
+      <div class="point"><div><h4>One H1 per document</h4><p>Use <code>#</code> for the title and <code>##</code> / <code>###</code> for structure, like chapters in a book.</p></div></div>
+      <div class="point"><div><h4>Open folders, not files</h4><p>Open the whole project folder in VS Code so search, Git, and the terminal all work on the same scope.</p></div></div>
+      <div class="point"><div><h4>Command Palette is the master key</h4><p><span class="keys" data-win="Ctrl+Shift+P" data-mac="⌘+⇧+P"></span> finds any feature by name. You never need to memorize menus.</p></div></div>
+    </div>
+  </section>
+
+  <section class="sec" id="d1-md">
+    <div class="sec-head"><div class="kicker"><b>03</b> — Most used</div><h2>Markdown syntax you will use daily</h2><p>Left is what you type, right is what readers see.</p></div>
+    <div class="md-grid">
+      <div class="md-pair"><header><div><h4>Headings</h4><p>More <code>#</code> = smaller heading (up to 6).</p></div><span class="pill p-common">Common</span></header>
+<pre class="code" data-lang="md" data-title="headings.md"># Heading 1
+## Heading 2
+### Heading 3</pre>
+        <div class="md-out"><h1>Heading 1</h1><h2>Heading 2</h2><h3>Heading 3</h3></div></div>
+
+      <div class="md-pair"><header><div><h4>Emphasis</h4><p>Wrap words with symbols.</p></div><span class="pill p-common">Common</span></header>
+<pre class="code" data-lang="md" data-title="emphasis.md">**bold**
+*italic*
+~~strikethrough~~
+***bold italic***</pre>
+        <div class="md-out"><p><b>bold</b></p><p><i>italic</i></p><p><s>strikethrough</s></p><p><b><i>bold italic</i></b></p></div></div>
+
+      <div class="md-pair"><header><div><h4>Lists</h4><p>Indent 2 spaces to nest.</p></div><span class="pill p-common">Common</span></header>
+<pre class="code" data-lang="md" data-title="lists.md">- Apple
+- Banana
+  - Nested item
+1. First
+2. Second</pre>
+        <div class="md-out"><ul><li>Apple</li><li>Banana<ul><li>Nested item</li></ul></li></ul><ol><li>First</li><li>Second</li></ol></div></div>
+
+      <div class="md-pair"><header><div><h4>Task lists</h4><p>Checkboxes on GitHub.</p></div><span class="pill p-common">Common</span></header>
+<pre class="code" data-lang="md" data-title="tasks.md">- [x] Install VS Code
+- [x] Learn Markdown
+- [ ] Learn Git</pre>
+        <div class="md-out"><p>☑ Install VS Code<br>☑ Learn Markdown<br>☐ Learn Git</p></div></div>
+
+      <div class="md-pair"><header><div><h4>Links</h4><p>Text in brackets, URL in parentheses.</p></div><span class="pill p-common">Common</span></header>
+<pre class="code" data-lang="md" data-title="links.md">[Visit GitHub](https://github.com)
+&lt;https://example.com&gt;</pre>
+        <div class="md-out"><p><a href="#d1-md">Visit GitHub</a><br><a href="#d1-md">https://example.com</a></p></div></div>
+
+      <div class="md-pair"><header><div><h4>Images</h4><p>A link with <code>!</code> in front.</p></div><span class="pill p-common">Common</span></header>
+<pre class="code" data-lang="md" data-title="image.md">![Team photo](./assets/team.png)</pre>
+        <div class="md-out"><div class="img-ph" role="img" aria-label="Image placeholder"></div></div></div>
+
+      <div class="md-pair"><header><div><h4>Code</h4><p>Backticks for inline, triple for blocks.</p></div><span class="pill p-common">Common</span></header>
+<pre class="code" data-lang="md" data-title="code.md">Run `npm install` first.
+
+```js
+console.log("hi");
+```</pre>
+        <div class="md-out"><p>Run <code>npm install</code> first.</p><pre>console.log("hi");</pre></div></div>
+
+      <div class="md-pair"><header><div><h4>Blockquote</h4><p>Great for notes and quotes.</p></div><span class="pill p-common">Common</span></header>
+<pre class="code" data-lang="md" data-title="quote.md">&gt; Done is better than perfect.</pre>
+        <div class="md-out"><blockquote>Done is better than perfect.</blockquote></div></div>
+
+      <div class="md-pair"><header><div><h4>Tables</h4><p><code>:</code> controls alignment.</p></div><span class="pill p-common">Common</span></header>
+<pre class="code" data-lang="md" data-title="table.md">| Day | Topic    |
+|-----|:--------:|
+| 1   | Markdown |
+| 2   | CLI      |</pre>
+        <div class="md-out"><table><thead><tr><th>Day</th><th style="text-align:center">Topic</th></tr></thead><tbody><tr><td>1</td><td style="text-align:center">Markdown</td></tr><tr><td>2</td><td style="text-align:center">CLI</td></tr></tbody></table></div></div>
+
+      <div class="md-pair"><header><div><h4>Paragraphs &amp; divider</h4><p>Blank line = new paragraph.</p></div><span class="pill p-common">Common</span></header>
+<pre class="code" data-lang="md" data-title="paragraph.md">First paragraph.
+
+---
+
+Second paragraph.</pre>
+        <div class="md-out"><p>First paragraph.</p><hr><p>Second paragraph.</p></div></div>
+    </div>
+  </section>
+
+  <section class="sec" id="d1-mdrare">
+    <div class="sec-head"><div class="kicker"><b>04</b> — Rare but good to know</div><h2>Markdown power moves</h2><p>You will not use these every day, but they save you when you need them.</p></div>
+    <div class="grid g3">
+      <article class="card"><div class="top"><h4>Hard line break</h4><span class="pill p-rare">Rare</span></div><p>End a line with two spaces or <code>&lt;br&gt;</code> to break without starting a new paragraph.</p>
+<pre class="code" data-lang="md">Line one&lt;br&gt;
+Line two</pre></article>
+      <article class="card"><div class="top"><h4>Escape symbols</h4><span class="pill p-rare">Rare</span></div><p>Put a backslash before a symbol to show it literally.</p>
+<pre class="code" data-lang="md">\*not italic\*
+\# not a heading</pre></article>
+      <article class="card"><div class="top"><h4>Collapsible section</h4><span class="pill p-rare">Rare</span></div><p>HTML <code>&lt;details&gt;</code> works inside Markdown on GitHub. Perfect for FAQ answers and long logs.</p>
+<pre class="code" data-lang="md">&lt;details&gt;
+&lt;summary&gt;Show answer&lt;/summary&gt;
+The answer is 42.
+&lt;/details&gt;</pre></article>
+      <article class="card"><div class="top"><h4>Jump links (anchors)</h4><span class="pill p-rare">Rare</span></div><p>Every heading gets an id in lowercase with dashes. Link to it with <code>#</code>.</p>
+<pre class="code" data-lang="md">[Go to setup](#getting-started)
+
+## Getting Started</pre></article>
+      <article class="card"><div class="top"><h4>Footnotes</h4><span class="pill p-rare">Rare</span></div><p>Add references without cluttering the sentence.</p>
+<pre class="code" data-lang="md">Git was created in 2005.[^1]
+
+[^1]: By Linus Torvalds.</pre></article>
+      <article class="card"><div class="top"><h4>GitHub alerts</h4><span class="pill p-rare">Rare</span></div><p>Colored callout boxes that render on GitHub. Types: NOTE, TIP, IMPORTANT, WARNING, CAUTION.</p>
+<pre class="code" data-lang="md">&gt; [!WARNING]
+&gt; Never commit your .env file.</pre></article>
+      <article class="card"><div class="top"><h4>Diagrams with Mermaid</h4><span class="pill p-rare">Rare</span></div><p>GitHub draws flowcharts from text inside a <code>mermaid</code> code block.</p>
+<pre class="code" data-lang="md">```mermaid
+graph LR
+  Edit --&gt; Add --&gt; Commit --&gt; Push
+```</pre></article>
+      <article class="card"><div class="top"><h4>Hidden comments</h4><span class="pill p-rare">Rare</span></div><p>Notes for yourself that never show in the rendered page.</p>
+<pre class="code" data-lang="md">&lt;!-- TODO: add screenshots --&gt;</pre></article>
+      <article class="card"><div class="top"><h4>Reference-style links</h4><span class="pill p-rare">Rare</span></div><p>Keep long URLs at the bottom so paragraphs stay readable.</p>
+<pre class="code" data-lang="md">Read the [docs][1].
+
+[1]: https://docs.github.com</pre></article>
+      <article class="card"><div class="top"><h4>Keyboard keys</h4><span class="pill p-rare">Rare</span></div><p>Use <code>&lt;kbd&gt;</code> to show keys in tutorials.</p>
+<pre class="code" data-lang="md">Press &lt;kbd&gt;Ctrl&lt;/kbd&gt; + &lt;kbd&gt;S&lt;/kbd&gt;</pre></article>
+      <article class="card"><div class="top"><h4>Sized &amp; centered image</h4><span class="pill p-rare">Rare</span></div><p>Plain Markdown can't resize images, so switch to HTML.</p>
+<pre class="code" data-lang="md">&lt;p align="center"&gt;
+  &lt;img src="logo.png" width="120"&gt;
+&lt;/p&gt;</pre></article>
+      <article class="card"><div class="top"><h4>Emoji shortcodes</h4><span class="pill p-rare">Rare</span></div><p>GitHub converts <code>:name:</code> into emoji in issues, PRs, and READMEs.</p>
+<pre class="code" data-lang="md">:rocket: Shipped! :white_check_mark:</pre></article>
+    </div>
+  </section>
+
+  <section class="sec" id="d1-readme">
+    <div class="sec-head"><div class="kicker"><b>05</b> — Full flow</div><h2>Flow: write your first README</h2><p>From empty folder to a professional project page.</p></div>
+    <div class="steps">
+      <div class="step"><h4>Create and open the project</h4><p>Make a folder and open it in VS Code from the terminal.</p>
+<pre class="code" data-lang="sh">mkdir my-portfolio
+cd my-portfolio
+code .</pre></div>
+      <div class="step"><h4>Create <code>README.md</code></h4><p>In the Explorer click <b>New File</b>, or press <span class="keys" data-win="Ctrl+N" data-mac="⌘+N"></span> then save it as <code>README.md</code>.</p></div>
+      <div class="step"><h4>Write the structure</h4><p>Use a proven template: title, one-liner, features, setup, tech, license.</p>
+<pre class="code" data-lang="md" data-title="README.md"># My Portfolio
+&gt; A personal site that shows my projects and skills.
+
+## Features
+- Responsive layout
+- Dark mode
+
+## Getting Started
+```bash
+git clone https://github.com/&lt;you&gt;/my-portfolio.git
+cd my-portfolio
+```
+
+## Tech Stack
+HTML · CSS · JavaScript
+
+## License
+MIT</pre></div>
+      <div class="step"><h4>Preview side by side</h4><p>Press <span class="keys" data-win="Ctrl+K V" data-mac="⌘+K V"></span> to open a live preview next to your editor.</p></div>
+      <div class="step"><h4>Save and ship</h4><p>Save with <span class="keys" data-win="Ctrl+S" data-mac="⌘+S"></span>. On Day 3 you will commit and push it so GitHub renders it as your repo homepage.</p></div>
+    </div>
+  </section>
+
+  <section class="sec" id="d1-ui">
+    <div class="sec-head"><div class="kicker"><b>06</b> — General explanation</div><h2>Anatomy of VS Code</h2><p>Six zones. Once you know their names, every tutorial becomes easy to follow.</p></div>
+    <figure class="figure">
+      <div class="svg-scroll">
+      <svg viewBox="0 0 900 500" role="img" aria-label="VS Code window with numbered zones">
+        <defs><linearGradient id="vsglow" x1="0" x2="1"><stop offset="0" stop-color="#98E8DE"/><stop offset="1" stop-color="#A66CFF"/></linearGradient></defs>
+        <rect x="10" y="10" width="880" height="470" rx="14" fill="#050b33" stroke="url(#vsglow)" stroke-opacity=".55"/>
+        <path d="M24 10h852a14 14 0 0 1 14 14v22H10V24a14 14 0 0 1 14-14z" fill="#070f42"/>
+        <circle cx="32" cy="28" r="5" fill="#FF6B9A"/><circle cx="50" cy="28" r="5" fill="#FFECCB"/><circle cx="68" cy="28" r="5" fill="#98E8DE"/>
+        <rect x="330" y="18" width="240" height="20" rx="6" fill="#0b1660" stroke="#A66CFF" stroke-opacity=".7"/>
+        <text x="450" y="32" text-anchor="middle" font-size="11" fill="#8C92C4">⌕  module-1</text>
+        <rect x="10" y="46" width="50" height="406" fill="#040928"/>
+        <rect x="10" y="64" width="3" height="24" fill="#98E8DE"/>
+        <g fill="none" stroke-width="1.8" stroke-linecap="round">
+          <path d="M28 68h10l6 6v12H28z" stroke="#98E8DE"/>
+          <circle cx="34" cy="122" r="6" stroke="#8C92C4"/><path d="m39 127 5 5" stroke="#8C92C4"/>
+          <circle cx="29" cy="160" r="3" stroke="#8C92C4"/><circle cx="29" cy="178" r="3" stroke="#8C92C4"/><circle cx="41" cy="165" r="3" stroke="#8C92C4"/><path d="M29 163v12M41 168c0 6-8 4-12 7" stroke="#8C92C4"/>
+          <path d="M28 205l14 8-14 8z" stroke="#8C92C4"/>
+          <path d="M27 248h7v7h-7zM37 248h7v7h-7zM27 258h7v7h-7zM39 256l5 5-5 5-5-5z" stroke="#8C92C4"/>
+        </g>
+        <rect x="60" y="46" width="200" height="406" fill="#071043"/>
+        <text x="76" y="68" font-size="10" letter-spacing="1.5" fill="#8C92C4">EXPLORER</text>
+        <g font-size="11.5">
+          <text x="76" y="96" fill="#DADDF6" font-weight="700">▾ MODULE-1</text>
+          <text x="88" y="120" fill="#C9CCEC">▸ assets</text>
+          <text x="96" y="144" fill="#C9CCEC"><tspan fill="#FFB38A">◆</tspan> index.html</text>
+          <rect x="60" y="154" width="200" height="22" fill="#A66CFF" opacity=".25"/>
+          <text x="96" y="169" fill="#fff"><tspan fill="#98E8DE">M↓</tspan> README.md</text>
+          <text x="96" y="194" fill="#C9CCEC"><tspan fill="#7DA8FF">#</tspan> style.css</text>
+          <text x="96" y="218" fill="#C9CCEC"><tspan fill="#FFECCB">JS</tspan> script.js</text>
+          <text x="96" y="242" fill="#8C92C4"><tspan fill="#8C92C4">◇</tspan> .gitignore</text>
+          <text x="76" y="414" fill="#8C92C4" font-size="10">▸ OUTLINE</text>
+          <text x="76" y="436" fill="#8C92C4" font-size="10">▸ TIMELINE</text>
+        </g>
+        <rect x="260" y="46" width="630" height="30" fill="#060d3c"/>
+        <rect x="260" y="46" width="136" height="30" fill="#050b33"/><rect x="260" y="46" width="136" height="2" fill="#98E8DE"/>
+        <text x="280" y="66" font-size="11.5" fill="#FFECCB">README.md  ×</text>
+        <text x="414" y="66" font-size="11.5" fill="#8C92C4">index.html</text>
+        <text x="276" y="94" font-size="10" fill="#8C92C4">module-1 › README.md</text>
+        <rect x="262" y="226" width="580" height="20" fill="#98E8DE" opacity=".06"/>
+        <g font-size="12">
+          <g fill="#4d5490" text-anchor="end"><text x="288" y="120">1</text><text x="288" y="140">2</text><text x="288" y="160">3</text><text x="288" y="180">4</text><text x="288" y="200">5</text><text x="288" y="220">6</text><text x="288" y="240">7</text><text x="288" y="260">8</text><text x="288" y="280">9</text></g>
+          <text x="304" y="120" fill="#C59BFF"># <tspan fill="#FFECCB" font-weight="700">Module 1</tspan></text>
+          <text x="304" y="160" fill="#C59BFF">## <tspan fill="#FFECCB">Day 1 — Markdown</tspan></text>
+          <text x="304" y="180" fill="#DADDF6">Learn <tspan fill="#fff" font-weight="700">**bold**</tspan>, <tspan font-style="italic">*italic*</tspan>, and <tspan fill="#98E8DE">`code`</tspan>.</text>
+          <text x="304" y="220" fill="#98E8DE">- <tspan fill="#DADDF6">[x] Install VS Code</tspan></text>
+          <text x="304" y="240" fill="#98E8DE">- <tspan fill="#DADDF6">[ ] Write README</tspan><tspan class="blink" fill="#FFECCB">▌</tspan></text>
+          <text x="304" y="280" fill="#C59BFF">&gt; <tspan fill="#9EA4D6" font-style="italic">Practice every day.</tspan></text>
+        </g>
+        <g fill="#98E8DE" opacity=".25"><rect x="852" y="104" width="22" height="3"/><rect x="852" y="112" width="14" height="3"/><rect x="852" y="124" width="26" height="3"/><rect x="852" y="132" width="18" height="3"/><rect x="852" y="144" width="22" height="3"/><rect x="852" y="152" width="10" height="3"/></g>
+        <rect x="260" y="306" width="630" height="146" fill="#040928"/><rect x="260" y="306" width="630" height="1" fill="#98E8DE" opacity=".25"/>
+        <g font-size="10.5" letter-spacing="1"><text x="280" y="326" fill="#8C92C4">PROBLEMS</text><text x="364" y="326" fill="#8C92C4">OUTPUT</text><text x="434" y="326" fill="#FFECCB">TERMINAL</text></g>
+        <rect x="434" y="331" width="62" height="2" fill="#98E8DE"/>
+        <g font-size="11.5">
+          <text x="280" y="356" fill="#98E8DE">PS C:\module-1&gt; <tspan fill="#DADDF6">git status</tspan></text>
+          <text x="280" y="376" fill="#C9CCEC">On branch main</text>
+          <text x="280" y="396" fill="#C9CCEC">Changes not staged for commit:</text>
+          <text x="280" y="416" fill="#FF6B9A">        modified:   README.md</text>
+          <text x="280" y="440" fill="#98E8DE">PS C:\module-1&gt; <tspan class="blink" fill="#FFECCB">▌</tspan></text>
+        </g>
+        <path d="M10 452h880v14a14 14 0 0 1-14 14H24a14 14 0 0 1-14-14z" fill="#6C2BD9"/>
+        <g font-size="11" fill="#fff"><text x="24" y="470">⎇ main*</text><text x="96" y="470">↓0 ↑1</text><text x="160" y="470">⊗ 0  ⚠ 0</text><text x="640" y="470">Ln 7, Col 21</text><text x="736" y="470">UTF-8</text><text x="796" y="470">Markdown</text></g>
+        <g font-family="Space Grotesk" font-weight="700" font-size="13" text-anchor="middle">
+          <g class="ping"><circle cx="35" cy="320" r="13" fill="#98E8DE"/><text x="35" y="325" fill="#02051c">1</text></g>
+          <g class="ping"><circle cx="210" cy="300" r="13" fill="#98E8DE"/><text x="210" y="305" fill="#02051c">2</text></g>
+          <g class="ping"><circle cx="760" cy="180" r="13" fill="#98E8DE"/><text x="760" y="185" fill="#02051c">3</text></g>
+          <g class="ping"><circle cx="840" cy="390" r="13" fill="#98E8DE"/><text x="840" y="395" fill="#02051c">4</text></g>
+          <g class="ping"><circle cx="520" cy="466" r="12" fill="#FFECCB"/><text x="520" y="471" fill="#02051c">5</text></g>
+          <g class="ping"><circle cx="594" cy="28" r="12" fill="#FFECCB"/><text x="594" y="33" fill="#02051c">6</text></g>
+        </g>
+      </svg>
+      </div>
+      <ol class="legend cols">
+        <li><span class="n">1</span><div><b>Activity Bar</b>Switch between Explorer, Search, Source Control, Run &amp; Debug, and Extensions.</div></li>
+        <li><span class="n">2</span><div><b>Side Bar</b>Shows the selected view, most often your file tree.</div></li>
+        <li><span class="n">3</span><div><b>Editor</b>Where you write code. Split it to see two files side by side.</div></li>
+        <li><span class="n">4</span><div><b>Panel</b>Terminal, Problems, and Output live here. Toggle it with <span class="keys" data-win="Ctrl+`" data-mac="⌃+`"></span>.</div></li>
+        <li><span class="n">5</span><div><b>Status Bar</b>Shows current Git branch, errors, cursor position, and file language.</div></li>
+        <li><span class="n">6</span><div><b>Command Center</b>Search files by name, or type <code>&gt;</code> to run any command.</div></li>
+      </ol>
+    </figure>
+  </section>
+
+  <section class="sec" id="d1-keys">
+    <div class="sec-head"><div class="kicker"><b>07</b> — Most used vs rare</div><h2>Keyboard shortcuts</h2><p>Use the <b>Win / Mac</b> switch at the top right to change key labels.</p></div>
+    <h3 class="sub"><span class="pill p-common">Every day</span> The essentials</h3>
+    <div class="kb-list">
+      <div class="kb"><span class="lbl"><b>Quick open file</b> by name</span><span class="keys" data-win="Ctrl+P" data-mac="⌘+P"></span></div>
+      <div class="kb"><span class="lbl"><b>Command Palette</b></span><span class="keys" data-win="Ctrl+Shift+P" data-mac="⌘+⇧+P"></span></div>
+      <div class="kb"><span class="lbl"><b>Toggle terminal</b></span><span class="keys" data-win="Ctrl+`" data-mac="⌃+`"></span></div>
+      <div class="kb"><span class="lbl"><b>Toggle sidebar</b></span><span class="keys" data-win="Ctrl+B" data-mac="⌘+B"></span></div>
+      <div class="kb"><span class="lbl"><b>Save</b> file</span><span class="keys" data-win="Ctrl+S" data-mac="⌘+S"></span></div>
+      <div class="kb"><span class="lbl"><b>Comment</b> line / selection</span><span class="keys" data-win="Ctrl+/" data-mac="⌘+/"></span></div>
+      <div class="kb"><span class="lbl"><b>Move line</b> up / down</span><span class="keys" data-win="Alt+↑/↓" data-mac="⌥+↑/↓"></span></div>
+      <div class="kb"><span class="lbl"><b>Duplicate line</b> down</span><span class="keys" data-win="Shift+Alt+↓" data-mac="⇧+⌥+↓"></span></div>
+      <div class="kb"><span class="lbl"><b>Select next match</b></span><span class="keys" data-win="Ctrl+D" data-mac="⌘+D"></span></div>
+      <div class="kb"><span class="lbl"><b>Find / Replace</b> in file</span><span class="keys" data-win="Ctrl+F Ctrl+H" data-mac="⌘+F ⌥+⌘+F"></span></div>
+      <div class="kb"><span class="lbl"><b>Search</b> all files</span><span class="keys" data-win="Ctrl+Shift+F" data-mac="⌘+⇧+F"></span></div>
+      <div class="kb"><span class="lbl"><b>Undo / Redo</b></span><span class="keys" data-win="Ctrl+Z Ctrl+Y" data-mac="⌘+Z ⇧+⌘+Z"></span></div>
+      <div class="kb"><span class="lbl"><b>Markdown preview</b> (side)</span><span class="keys" data-win="Ctrl+K V" data-mac="⌘+K V"></span></div>
+      <div class="kb"><span class="lbl"><b>Split editor</b></span><span class="keys" data-win="Ctrl+\" data-mac="⌘+\"></span></div>
+      <div class="kb"><span class="lbl"><b>Format document</b></span><span class="keys" data-win="Shift+Alt+F" data-mac="⇧+⌥+F"></span></div>
+      <div class="kb"><span class="lbl"><b>Close tab</b></span><span class="keys" data-win="Ctrl+W" data-mac="⌘+W"></span></div>
+    </div>
+    <h3 class="sub"><span class="pill p-rare">Rare</span> Pro moves worth knowing</h3>
+    <div class="kb-list">
+      <div class="kb"><span class="lbl"><b>Add cursor</b> anywhere</span><span class="keys" data-win="Alt+Click" data-mac="⌥+Click"></span></div>
+      <div class="kb"><span class="lbl"><b>Cursor above / below</b></span><span class="keys" data-win="Ctrl+Alt+↑/↓" data-mac="⌥+⌘+↑/↓"></span></div>
+      <div class="kb"><span class="lbl"><b>Select all matches</b></span><span class="keys" data-win="Ctrl+Shift+L" data-mac="⌘+⇧+L"></span></div>
+      <div class="kb"><span class="lbl"><b>Rename symbol</b> everywhere</span><span class="keys" data-win="F2" data-mac="F2"></span></div>
+      <div class="kb"><span class="lbl"><b>Go to definition</b></span><span class="keys" data-win="F12" data-mac="F12"></span></div>
+      <div class="kb"><span class="lbl"><b>Go to line</b></span><span class="keys" data-win="Ctrl+G" data-mac="⌃+G"></span></div>
+      <div class="kb"><span class="lbl"><b>Go to symbol</b> in file</span><span class="keys" data-win="Ctrl+Shift+O" data-mac="⌘+⇧+O"></span></div>
+      <div class="kb"><span class="lbl"><b>Zen mode</b> (focus)</span><span class="keys" data-win="Ctrl+K Z" data-mac="⌘+K Z"></span></div>
+      <div class="kb"><span class="lbl"><b>Fold all</b> regions</span><span class="keys" data-win="Ctrl+K Ctrl+0" data-mac="⌘+K ⌘+0"></span></div>
+      <div class="kb"><span class="lbl"><b>Open settings</b></span><span class="keys" data-win="Ctrl+," data-mac="⌘+,"></span></div>
+      <div class="kb"><span class="lbl"><b>Reopen closed tab</b></span><span class="keys" data-win="Ctrl+Shift+T" data-mac="⌘+⇧+T"></span></div>
+      <div class="kb"><span class="lbl"><b>Toggle word wrap</b></span><span class="keys" data-win="Alt+Z" data-mac="⌥+Z"></span></div>
+      <div class="kb"><span class="lbl"><b>Source Control</b> view</span><span class="keys" data-win="Ctrl+Shift+G" data-mac="⌃+⇧+G"></span></div>
+      <div class="kb"><span class="lbl"><b>Keyboard shortcuts</b> list</span><span class="keys" data-win="Ctrl+K Ctrl+S" data-mac="⌘+K ⌘+S"></span></div>
+    </div>
+  </section>
+
+  <section class="sec" id="d1-ext">
+    <div class="sec-head"><div class="kicker"><b>08</b> — Most used</div><h2>Extensions worth installing</h2><p>Open Extensions with <span class="keys" data-win="Ctrl+Shift+X" data-mac="⌘+⇧+X"></span> and search by name.</p></div>
+    <div class="grid g4">
+      <article class="card"><div class="top"><h4>Prettier</h4><span class="pill p-common">Must</span></div><p>Auto-formats your code on save so the whole team writes in one style.</p></article>
+      <article class="card"><div class="top"><h4>Live Server</h4><span class="pill p-common">Must</span></div><p>Opens your HTML in the browser and reloads it every time you save.</p></article>
+      <article class="card"><div class="top"><h4>Markdown All in One</h4><span class="pill p-common">Must</span></div><p>Shortcuts, auto table of contents, and list helpers for Markdown.</p></article>
+      <article class="card"><div class="top"><h4>GitLens</h4><span class="pill p-common">Useful</span></div><p>Shows who changed each line and when, right inside the editor.</p></article>
+      <article class="card"><div class="top"><h4>ESLint</h4><span class="pill p-common">Useful</span></div><p>Catches JavaScript mistakes before you run the code.</p></article>
+      <article class="card"><div class="top"><h4>Error Lens</h4><span class="pill p-common">Useful</span></div><p>Prints errors inline at the end of the line, so you can't miss them.</p></article>
+      <article class="card"><div class="top"><h4>Code Spell Checker</h4><span class="pill p-rare">Nice</span></div><p>Underlines typos in code, comments, and Markdown.</p></article>
+      <article class="card"><div class="top"><h4>Material Icon Theme</h4><span class="pill p-rare">Nice</span></div><p>Gives each file type a recognizable icon in the Explorer.</p></article>
+    </div>
+  </section>
+
+  <section class="sec" id="d1-gems">
+    <div class="sec-head"><div class="kicker"><b>09</b> — Rare but good to know</div><h2>VS Code hidden gems</h2></div>
+    <div class="grid g3">
+      <article class="card"><div class="top"><h4><code>code .</code> from terminal</h4><span class="pill p-rare">Rare</span></div><p>Opens the current folder in VS Code. On Mac, enable it first via Command Palette → "Shell Command: Install 'code' command".</p></article>
+      <article class="card"><div class="top"><h4>Format on Save</h4><span class="pill p-rare">Rare</span></div><p>Settings → search "format on save" → tick it. Combined with Prettier, your files are always tidy.</p></article>
+      <article class="card"><div class="top"><h4>Auto Save</h4><span class="pill p-rare">Rare</span></div><p>File → Auto Save writes changes automatically. Great for Live Server, risky for forgetful commits.</p></article>
+      <article class="card"><div class="top"><h4>Emmet</h4><span class="pill p-rare">Rare</span></div><p>Type <code>!</code> then <kbd>Tab</kbd> in an HTML file to get a full boilerplate. <code>ul&gt;li*3</code> + <kbd>Tab</kbd> builds a list.</p></article>
+      <article class="card"><div class="top"><h4>Local History (Timeline)</h4><span class="pill p-rare">Rare</span></div><p>The Timeline panel keeps earlier saves of a file, even without Git. A lifesaver after accidental deletes.</p></article>
+      <article class="card"><div class="top"><h4>settings.json</h4><span class="pill p-rare">Rare</span></div><p>Every setting is stored as JSON. Open it via Command Palette → "Preferences: Open User Settings (JSON)".</p></article>
+      <article class="card"><div class="top"><h4>User Snippets</h4><span class="pill p-rare">Rare</span></div><p>Save reusable code templates triggered by a short prefix. Find it under Command Palette → "Snippets".</p></article>
+      <article class="card"><div class="top"><h4>Built-in Source Control</h4><span class="pill p-rare">Rare</span></div><p>Stage, commit, and push with clicks from the branch icon. Learn the CLI first so you know what the buttons do.</p></article>
+      <article class="card"><div class="top"><h4>Settings Sync &amp; Profiles</h4><span class="pill p-rare">Rare</span></div><p>Sign in to sync extensions and settings across computers. Profiles let you keep separate setups per course or job.</p></article>
+    </div>
+  </section>
+</section>
+
+<!-- ================================================================ DAY 2 -->
+<section class="day" id="day2" data-day="2" hidden>
+  <div class="hero">
+    <div>
+      <div class="eyebrow"><span class="dot"></span>Day 02 · Talk to the machine</div>
+      <h1>CLI <span style="color:var(--muted)">&amp;</span><br><span class="grad">Commands</span></h1>
+      <p class="lead">The command line lets you control your computer by typing instead of clicking. It is faster, repeatable, and required by almost every developer tool, including Git.</p>
+      <div class="chips"><span>bash · zsh · PowerShell</span><span>18 daily commands</span><span>16 power tools</span><span>10 fixes</span></div>
+    </div>
+    <div class="hero-art">
+      <svg viewBox="0 0 520 400" role="img" aria-label="A glowing terminal floating above a synthwave horizon">
+        <defs>
+          <linearGradient id="d2sun" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FFECCB"/><stop offset=".55" stop-color="#FF6B9A"/><stop offset="1" stop-color="#A66CFF"/></linearGradient>
+          <linearGradient id="d2floor" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1a0b5e"/><stop offset="1" stop-color="#02051c"/></linearGradient>
+          <clipPath id="d2clip"><rect x="0" y="0" width="520" height="262"/></clipPath>
+          <linearGradient id="d2fade" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#A66CFF" stop-opacity=".9"/><stop offset="1" stop-color="#A66CFF" stop-opacity="0"/></linearGradient>
+        </defs>
+        <g fill="#fff"><circle class="tw" cx="40" cy="40" r="1.4"/><circle class="tw" cx="120" cy="90" r="1"/><circle class="tw" cx="470" cy="50" r="1.5"/><circle class="tw" cx="420" cy="120" r="1"/><circle class="tw" cx="70" cy="170" r="1.2"/><circle class="tw" cx="500" cy="200" r="1"/></g>
+        <g clip-path="url(#d2clip)">
+          <circle cx="260" cy="250" r="118" fill="url(#d2sun)" filter="url(#glow)" opacity=".95"/>
+          <g fill="#02051c"><rect x="120" y="206" width="280" height="4"/><rect x="120" y="220" width="280" height="6"/><rect x="120" y="236" width="280" height="8"/><rect x="120" y="252" width="280" height="10"/></g>
+        </g>
+        <path d="M0 262 L60 214 L110 240 L160 200 L210 262Z" fill="#050a35" stroke="#98E8DE" stroke-opacity=".35"/>
+        <path d="M310 262 L370 210 L410 236 L460 196 L520 262Z" fill="#050a35" stroke="#98E8DE" stroke-opacity=".35"/>
+        <rect x="0" y="262" width="520" height="138" fill="url(#d2floor)"/>
+        <g stroke="url(#d2fade)" stroke-width="1">
+          <path d="M260 262 L-260 400M260 262 L-100 400M260 262 L60 400M260 262 L180 400M260 262 L260 400M260 262 L340 400M260 262 L460 400M260 262 L620 400M260 262 L780 400"/>
+        </g>
+        <g stroke="#A66CFF" stroke-opacity=".5"><path d="M0 270H520M0 282H520M0 300H520M0 326H520M0 362H520"/></g>
+        <path d="M0 262H520" stroke="#98E8DE" stroke-width="2" filter="url(#glow)"/>
+        <g class="float-a">
+          <rect x="96" y="58" width="328" height="190" rx="14" fill="#02051c" fill-opacity=".93" stroke="#98E8DE" stroke-opacity=".6"/>
+          <path d="M110 58h300a14 14 0 0 1 14 14v12H96V72a14 14 0 0 1 14-14z" fill="#00105B"/>
+          <circle cx="114" cy="72" r="4.5" fill="#FF6B9A"/><circle cx="130" cy="72" r="4.5" fill="#FFECCB"/><circle cx="146" cy="72" r="4.5" fill="#98E8DE"/>
+          <text x="260" y="76" text-anchor="middle" font-size="10" fill="#8C92C4">bash — ~/revou</text>
+          <g font-size="12.5">
+            <text x="112" y="108" fill="#98E8DE">~ $ <tspan fill="#FFECCB">mkdir</tspan><tspan fill="#DADDF6"> revou</tspan></text>
+            <text x="112" y="130" fill="#98E8DE">~ $ <tspan fill="#FFECCB">cd</tspan><tspan fill="#DADDF6"> revou</tspan></text>
+            <text x="112" y="152" fill="#98E8DE">~/revou $ <tspan fill="#FFECCB">touch</tspan><tspan fill="#DADDF6"> index.html</tspan></text>
+            <text x="112" y="174" fill="#98E8DE">~/revou $ <tspan fill="#FFECCB">ls</tspan><tspan fill="#C59BFF"> -la</tspan></text>
+            <text x="112" y="196" fill="#8C92C4">index.html</text>
+            <text x="112" y="224" fill="#98E8DE">~/revou $ <tspan class="blink" fill="#FFECCB">█</tspan></text>
+          </g>
+        </g>
+      </svg>
+    </div>
+  </div>
+
+  <nav class="subnav">
+    <a href="#d2-big">Big Picture</a><a href="#d2-key">Key Points</a><a href="#d2-anat">Command Anatomy</a><a href="#d2-path">Paths</a><a href="#d2-daily">Daily Commands</a><a href="#d2-power">Power Tools</a><a href="#d2-kb">Terminal Keys</a><a href="#d2-flow">Flows</a><a href="#d2-fix">Troubleshoot</a><a href="#d2-danger">Danger Zone</a><a href="#d2-shells">Shells</a>
+  </nav>
+
+  <section class="sec" id="d2-big">
+    <div class="sec-head"><div class="kicker"><b>01</b> — General explanation</div><h2>The big picture</h2><p>Four words people mix up all the time.</p></div>
+    <figure class="figure split">
+      <svg viewBox="0 0 520 330" role="img" aria-label="Layers: you, terminal, shell, operating system">
+        <defs><radialGradient id="core"><stop offset="0" stop-color="#FFECCB"/><stop offset=".6" stop-color="#FF6B9A" stop-opacity=".7"/><stop offset="1" stop-color="#A66CFF" stop-opacity="0"/></radialGradient>
+        <marker id="ar" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#98E8DE"/></marker>
+        <marker id="arp" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#C59BFF"/></marker></defs>
+        <circle cx="260" cy="170" r="150" fill="none" stroke="#98E8DE" stroke-opacity=".45" stroke-dasharray="4 7"/>
+        <circle cx="260" cy="170" r="114" fill="#A66CFF" fill-opacity=".07" stroke="#A66CFF" stroke-opacity=".7"/>
+        <circle cx="260" cy="170" r="78" fill="#98E8DE" fill-opacity=".07" stroke="#98E8DE" stroke-opacity=".7"/>
+        <circle cx="260" cy="170" r="50" fill="url(#core)" class="ping"/>
+        <text x="260" y="166" text-anchor="middle" font-family="Space Grotesk" font-weight="700" font-size="17" fill="#02051c">OS</text>
+        <text x="260" y="184" text-anchor="middle" font-size="9.5" fill="#02051c">kernel · files</text>
+        <text x="260" y="14" text-anchor="middle" font-size="11" letter-spacing="3" fill="#98E8DE">YOU</text>
+        <text x="260" y="78" text-anchor="middle" font-size="11" letter-spacing="2.5" fill="#C59BFF">TERMINAL</text>
+        <text x="260" y="112" text-anchor="middle" font-size="11" letter-spacing="2.5" fill="#98E8DE">SHELL</text>
+        <path d="M30 150 C 120 150, 150 160, 205 165" stroke="#98E8DE" stroke-width="2" fill="none" marker-end="url(#ar)" class="dash" stroke-dasharray="6 6"/>
+        <text x="26" y="140" font-size="12" fill="#FFECCB">$ ls -la</text>
+        <path d="M315 175 C 370 180, 400 192, 490 192" stroke="#C59BFF" stroke-width="2" fill="none" marker-end="url(#arp)" class="dash" stroke-dasharray="6 6"/>
+        <text x="420" y="214" font-size="12" fill="#C59BFF">output</text>
+      </svg>
+      <ol class="legend">
+        <li><span class="n">T</span><div><b>Terminal</b>The window app that shows text in and out, like Windows Terminal, macOS Terminal, or the VS Code panel.</div></li>
+        <li><span class="n">S</span><div><b>Shell</b>The program inside the terminal that reads your command and runs it. Examples: bash, zsh, PowerShell.</div></li>
+        <li><span class="n">C</span><div><b>Command</b>One instruction like <code>ls</code> or <code>git status</code>. Each command is a small program.</div></li>
+        <li><span class="n">P</span><div><b>Prompt</b>The text before your cursor, like <code>~/revou $</code>, which also tells you where you are.</div></li>
+      </ol>
+    </figure>
+    <div class="callout tip"><span class="ci">i</span><div><b>CLI vs GUI.</b> A GUI is clicking icons; a CLI is typing commands. Both control the same files and folders.</div></div>
+  </section>
+
+  <section class="sec" id="d2-key">
+    <div class="sec-head"><div class="kicker"><b>02</b> — Important points</div><h2>Key points to remember</h2></div>
+    <div class="points four">
+      <div class="point"><div><h4>Always know where you are</h4><p>Run <code>pwd</code> before any action. Most mistakes happen in the wrong folder.</p></div></div>
+      <div class="point"><div><h4><kbd>Tab</kbd> completes, <kbd>↑</kbd> recalls</h4><p>Tab finishes file names for you, and the up arrow brings back previous commands.</p></div></div>
+      <div class="point"><div><h4>Quote names with spaces</h4><p>Write <code>cd "My Folder"</code>, or better, avoid spaces and use <code>my-folder</code>.</p></div></div>
+      <div class="point"><div><h4>There is no Recycle Bin</h4><p><code>rm</code> deletes permanently. Read the command twice before pressing Enter.</p></div></div>
+      <div class="point"><div><h4><kbd>Ctrl</kbd>+<kbd>C</kbd> stops, not copies</h4><p>In a terminal it cancels the running command. Copy with <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>C</kbd> or right-click.</p></div></div>
+      <div class="point"><div><h4>Flags change behavior</h4><p>Options like <code>-l</code> or <code>--all</code> modify a command. Run <code>command --help</code> to see them all.</p></div></div>
+      <div class="point"><div><h4>Case matters on Mac/Linux</h4><p><code>Readme.md</code> and <code>README.md</code> are different files there. Windows usually ignores case.</p></div></div>
+      <div class="point"><div><h4>Silence means success</h4><p>Many commands print nothing when they work. Errors are always printed.</p></div></div>
+    </div>
+  </section>
+
+  <section class="sec" id="d2-anat">
+    <div class="sec-head"><div class="kicker"><b>03</b> — General explanation</div><h2>Anatomy of a command</h2><p>Every command follows the same grammar: program, then options, then targets.</p></div>
+    <figure class="figure">
+      <div class="svg-scroll">
+      <svg viewBox="0 0 900 250" role="img" aria-label="git commit -m first commit split into program, subcommand, flag and argument">
+        <rect x="40" y="40" width="820" height="80" rx="16" fill="#010417" stroke="#98E8DE" stroke-opacity=".35"/>
+        <text x="70" y="92" font-size="30" fill="#98E8DE">$</text>
+        <text x="112" y="92" font-size="30" font-weight="700" fill="#98E8DE">git</text>
+        <text x="200" y="92" font-size="30" font-weight="700" fill="#FFECCB">commit</text>
+        <text x="352" y="92" font-size="30" font-weight="700" fill="#C59BFF">-m</text>
+        <text x="420" y="92" font-size="30" font-weight="700" fill="#FF9EC0">"first commit"</text>
+        <g stroke-width="2" fill="none">
+          <path d="M112 128 v14 h52 v-14" stroke="#98E8DE"/>
+          <path d="M200 128 v14 h120 v-14" stroke="#FFECCB"/>
+          <path d="M352 128 v14 h40 v-14" stroke="#C59BFF"/>
+          <path d="M420 128 v14 h250 v-14" stroke="#FF9EC0"/>
+          <path d="M138 142 v30" stroke="#98E8DE"/><path d="M260 142 v30" stroke="#FFECCB"/><path d="M372 142 v30" stroke="#C59BFF"/><path d="M545 142 v30" stroke="#FF9EC0"/>
+        </g>
+        <g font-family="Space Grotesk" font-weight="700" font-size="15" text-anchor="middle">
+          <text x="138" y="194" fill="#98E8DE">PROGRAM</text><text x="260" y="194" fill="#FFECCB">SUBCOMMAND</text><text x="372" y="194" fill="#C59BFF">FLAG</text><text x="545" y="194" fill="#FF9EC0">ARGUMENT</text>
+        </g>
+        <g font-size="11.5" text-anchor="middle" fill="#8C92C4">
+          <text x="138" y="214">the tool to run</text><text x="260" y="214">the action</text><text x="372" y="214">an option</text><text x="545" y="214">the value / target</text>
+        </g>
+        <text x="760" y="194" text-anchor="middle" font-size="11.5" fill="#8C92C4">short flag: -m</text>
+        <text x="760" y="214" text-anchor="middle" font-size="11.5" fill="#8C92C4">long flag: --message</text>
+      </svg>
+      </div>
+      <figcaption>Short flags use one dash and can be combined (<code>ls -la</code> = <code>ls -l -a</code>). Long flags use two dashes and are easier to read.</figcaption>
+    </figure>
+  </section>
+
+  <section class="sec" id="d2-path">
+    <div class="sec-head"><div class="kicker"><b>04</b> — Important points</div><h2>Paths: the map of your computer</h2><p>A path is the address of a file or folder.</p></div>
+    <div class="grid g2">
+      <figure class="figure" style="display:flex;align-items:center">
+        <svg viewBox="0 0 440 300" role="img" aria-label="Folder tree from root to index.html" style="width:100%;height:auto">
+          <g stroke="#98E8DE" stroke-opacity=".45" stroke-width="1.5" fill="none">
+            <path d="M38 52 V83 H62"/><path d="M76 96 V127 H108"/><path d="M122 140 V171 H154"/><path d="M168 184 V215 H198"/><path d="M216 232 V259 H246"/>
+          </g>
+          <g font-size="14">
+            <text x="32" y="44" fill="#FF9EC0" font-weight="700">/ <tspan fill="#8C92C4" font-weight="400">(or C:\)  root</tspan></text>
+            <text x="70" y="88" fill="#DADDF6">Users</text>
+            <text x="116" y="132" fill="#FFECCB">sam <tspan fill="#8C92C4">  ← ~ home</tspan></text>
+            <text x="162" y="176" fill="#DADDF6">projects <tspan fill="#8C92C4">  ← ..</tspan></text>
+            <rect x="200" y="201" width="140" height="28" rx="8" fill="#A66CFF" fill-opacity=".22" stroke="#A66CFF"/>
+            <text x="210" y="220" fill="#fff">module-1 <tspan fill="#C59BFF"> ← .</tspan></text>
+            <text x="254" y="264" fill="#98E8DE">index.html</text>
+          </g>
+        </svg>
+      </figure>
+      <div class="grid" style="align-content:start">
+        <div class="tbl-wrap"><table style="min-width:0"><thead><tr><th>Symbol</th><th>Means</th></tr></thead><tbody>
+          <tr><td><code>/</code></td><td>Root, the very top of the drive (<code>C:\</code> on Windows).</td></tr>
+          <tr><td><code>~</code></td><td>Your home folder, e.g. <code>/Users/sam</code>.</td></tr>
+          <tr><td><code>.</code></td><td>The current folder.</td></tr>
+          <tr><td><code>..</code></td><td>The parent folder, one level up.</td></tr>
+          <tr><td><code>-</code></td><td>With <code>cd -</code>, the previous folder you were in.</td></tr>
+        </tbody></table></div>
+        <article class="card"><h4>Absolute vs relative</h4><p><b>Absolute</b> starts from root and works anywhere. <b>Relative</b> starts from where you are now.</p>
+<pre class="code" data-lang="sh"># absolute
+cd /Users/sam/projects/module-1
+# relative (from projects)
+cd module-1
+# up one level, then into another
+cd ../day-2</pre></article>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec" id="d2-daily">
+    <div class="sec-head"><div class="kicker"><b>05</b> — Most used</div><h2>Daily commands</h2><p>Bash/zsh runs on Mac, Linux, and Git Bash on Windows. PowerShell is the Windows default.</p></div>
+    <div class="tbl-wrap"><table>
+      <thead><tr><th>Goal</th><th>bash / zsh</th><th>PowerShell</th><th>Note</th></tr></thead>
+      <tbody>
+        <tr><td>Where am I?</td><td><code>pwd</code></td><td><code>pwd</code></td><td>Print working directory.</td></tr>
+        <tr><td>List files</td><td><code>ls</code> · <code>ls -la</code></td><td><code>ls</code> · <code>ls -Force</code></td><td><code>-a</code> / <code>-Force</code> shows hidden files like <code>.git</code>.</td></tr>
+        <tr><td>Enter folder</td><td><code>cd folder</code></td><td><code>cd folder</code></td><td>Press <kbd>Tab</kbd> to autocomplete names.</td></tr>
+        <tr><td>Go up / home / back</td><td><code>cd ..</code> · <code>cd ~</code> · <code>cd -</code></td><td><code>cd ..</code> · <code>cd ~</code> · <code>cd -</code></td><td><code>cd -</code> works in PowerShell 6.2+.</td></tr>
+        <tr><td>Make folder</td><td><code>mkdir site</code> · <code>mkdir -p a/b/c</code></td><td><code>mkdir site</code> · <code>mkdir a\b\c</code></td><td><code>-p</code> creates missing parents.</td></tr>
+        <tr><td>Make empty file</td><td><code>touch index.html</code></td><td><code>ni index.html</code></td><td><code>ni</code> = <code>New-Item</code>.</td></tr>
+        <tr><td>Copy</td><td><code>cp a.txt b.txt</code> · <code>cp -r src bak</code></td><td><code>cp a.txt b.txt</code> · <code>cp -r src bak</code></td><td><code>-r</code> = recursive, for folders.</td></tr>
+        <tr><td>Move / rename</td><td><code>mv old.txt new.txt</code></td><td><code>mv old.txt new.txt</code></td><td>Same command does both.</td></tr>
+        <tr><td>Delete file</td><td><code>rm file.txt</code></td><td><code>rm file.txt</code></td><td>Permanent. No Recycle Bin.</td></tr>
+        <tr><td>Delete folder</td><td><code>rm -r folder</code></td><td><code>rm -r folder</code></td><td>Deletes everything inside too.</td></tr>
+        <tr><td>Read a file</td><td><code>cat notes.md</code></td><td><code>cat notes.md</code></td><td><code>cat</code> = <code>Get-Content</code> in PowerShell.</td></tr>
+        <tr><td>Print text</td><td><code>echo "hi"</code></td><td><code>echo "hi"</code></td><td>Useful with <code>&gt;</code> to write files.</td></tr>
+        <tr><td>Clear screen</td><td><code>clear</code> or <kbd>Ctrl</kbd>+<kbd>L</kbd></td><td><code>cls</code> · <code>clear</code></td><td>History stays; only the screen clears.</td></tr>
+        <tr><td>Open in VS Code</td><td><code>code .</code></td><td><code>code .</code></td><td><code>.</code> = this folder.</td></tr>
+        <tr><td>Open in file explorer</td><td><code>open .</code> (Mac)</td><td><code>start .</code> · <code>ii .</code></td><td>Linux: <code>xdg-open .</code></td></tr>
+        <tr><td>Command history</td><td><code>history</code></td><td><code>history</code></td><td>Or press <kbd>↑</kbd> repeatedly.</td></tr>
+        <tr><td>Get help</td><td><code>man ls</code> · <code>ls --help</code></td><td><code>Get-Help ls</code></td><td>Press <kbd>q</kbd> to exit <code>man</code>.</td></tr>
+        <tr><td>Check a tool exists</td><td><code>git --version</code></td><td><code>git --version</code></td><td>Same for <code>node -v</code>, <code>npm -v</code>.</td></tr>
+      </tbody>
+    </table></div>
+  </section>
+
+  <section class="sec" id="d2-power">
+    <div class="sec-head"><div class="kicker"><b>06</b> — Rare but good to know</div><h2>Power tools</h2><p>Combine small commands into big results.</p></div>
+    <div class="grid g3">
+      <article class="card"><div class="top"><span class="cmd">|  (pipe)</span><span class="pill p-rare">Rare</span></div><p>Sends the output of one command into the next.</p>
+<pre class="code" data-lang="sh">history | grep git</pre></article>
+      <article class="card"><div class="top"><span class="cmd">&gt;  and  &gt;&gt;</span><span class="pill p-rare">Rare</span></div><p><code>&gt;</code> overwrites a file with output; <code>&gt;&gt;</code> appends to the end.</p>
+<pre class="code" data-lang="sh">echo "# Notes" &gt; notes.md
+echo ".env" &gt;&gt; .gitignore</pre></article>
+      <article class="card"><div class="top"><span class="cmd">&amp;&amp;  and  ||</span><span class="pill p-rare">Rare</span></div><p><code>&amp;&amp;</code> runs the next command only if the first succeeds; <code>||</code> only if it fails.</p>
+<pre class="code" data-lang="sh">mkdir app &amp;&amp; cd app
+npm test || echo "tests failed"</pre></article>
+      <article class="card"><div class="top"><span class="cmd">grep</span><span class="pill p-rare">Rare</span></div><p>Searches text inside files. <code>-r</code> recursive, <code>-n</code> line numbers, <code>-i</code> ignore case.</p>
+<pre class="code" data-lang="sh">grep -rni "todo" .
+# PowerShell
+Select-String -Path *.js -Pattern "todo"</pre></article>
+      <article class="card"><div class="top"><span class="cmd">find</span><span class="pill p-rare">Rare</span></div><p>Finds files by name or type anywhere below a folder.</p>
+<pre class="code" data-lang="sh">find . -name "*.md"
+# PowerShell
+Get-ChildItem -Recurse -Filter *.md</pre></article>
+      <article class="card"><div class="top"><span class="cmd">*  wildcard</span><span class="pill p-rare">Rare</span></div><p><code>*</code> matches any characters, <code>?</code> matches exactly one.</p>
+<pre class="code" data-lang="sh">mv *.png assets/
+rm draft-?.txt</pre></article>
+      <article class="card"><div class="top"><span class="cmd">head · tail</span><span class="pill p-rare">Rare</span></div><p>Show the first or last lines of a file. <code>tail -f</code> follows a log live.</p>
+<pre class="code" data-lang="sh">head -n 5 data.csv
+tail -f server.log</pre></article>
+      <article class="card"><div class="top"><span class="cmd">which · where</span><span class="pill p-rare">Rare</span></div><p>Shows where a program is installed. Great for "command not found" debugging.</p>
+<pre class="code" data-lang="sh">which git
+# PowerShell
+Get-Command git</pre></article>
+      <article class="card"><div class="top"><span class="cmd">$PATH</span><span class="pill p-rare">Rare</span></div><p>An environment variable listing folders where the shell looks for programs.</p>
+<pre class="code" data-lang="sh">echo $PATH
+# PowerShell
+$env:PATH</pre></article>
+      <article class="card"><div class="top"><span class="cmd">alias</span><span class="pill p-rare">Rare</span></div><p>Create your own short name for a long command.</p>
+<pre class="code" data-lang="sh">alias gs="git status"
+# save it in ~/.bashrc or ~/.zshrc</pre></article>
+      <article class="card"><div class="top"><span class="cmd">chmod</span><span class="pill p-rare">Rare</span></div><p>Changes file permissions on Mac/Linux. <code>+x</code> makes a script runnable.</p>
+<pre class="code" data-lang="sh">chmod +x deploy.sh
+./deploy.sh</pre></article>
+      <article class="card"><div class="top"><span class="cmd">sudo</span><span class="pill p-care">Careful</span></div><p>Runs one command as administrator on Mac/Linux. Use only when you understand why it's needed.</p>
+<pre class="code" data-lang="sh">sudo apt install tree</pre></article>
+      <article class="card"><div class="top"><span class="cmd">ps · kill</span><span class="pill p-rare">Rare</span></div><p>List running processes and stop one by its ID.</p>
+<pre class="code" data-lang="sh">ps aux | grep node
+kill 4821
+# PowerShell
+Stop-Process -Id 4821</pre></article>
+      <article class="card"><div class="top"><span class="cmd">curl</span><span class="pill p-rare">Rare</span></div><p>Talks to a URL from the terminal. Handy for testing APIs.</p>
+<pre class="code" data-lang="sh">curl https://api.github.com/users/octocat</pre></article>
+      <article class="card"><div class="top"><span class="cmd">wc · sort · uniq</span><span class="pill p-rare">Rare</span></div><p>Count lines, sort them, and remove duplicates.</p>
+<pre class="code" data-lang="sh">wc -l index.html
+sort names.txt | uniq</pre></article>
+      <article class="card"><div class="top"><span class="cmd">tree</span><span class="pill p-rare">Rare</span></div><p>Prints a folder as a visual tree. Built into Windows; install it on Mac/Linux.</p>
+<pre class="code" data-lang="sh">tree -L 2
+# Windows CMD/PowerShell
+tree /F</pre></article>
+    </div>
+  </section>
+
+  <section class="sec" id="d2-kb">
+    <div class="sec-head"><div class="kicker"><b>07</b> — Most used</div><h2>Terminal keyboard moves</h2></div>
+    <div class="kb-list">
+      <div class="kb"><span class="lbl"><b>Autocomplete</b> file / command</span><span class="keys" data-win="Tab" data-mac="Tab"></span></div>
+      <div class="kb"><span class="lbl"><b>Previous / next</b> command</span><span class="keys" data-win="↑ ↓" data-mac="↑ ↓"></span></div>
+      <div class="kb"><span class="lbl"><b>Stop</b> running command</span><span class="keys" data-win="Ctrl+C" data-mac="⌃+C"></span></div>
+      <div class="kb"><span class="lbl"><b>Clear</b> screen</span><span class="keys" data-win="Ctrl+L" data-mac="⌃+L"></span></div>
+      <div class="kb"><span class="lbl"><b>Search history</b> (reverse)</span><span class="keys" data-win="Ctrl+R" data-mac="⌃+R"></span></div>
+      <div class="kb"><span class="lbl"><b>Jump to start / end</b> of line</span><span class="keys" data-win="Home End" data-mac="⌃+A ⌃+E"></span></div>
+      <div class="kb"><span class="lbl"><b>Delete previous word</b></span><span class="keys" data-win="Ctrl+Backspace" data-mac="⌃+W"></span></div>
+      <div class="kb"><span class="lbl"><b>Exit</b> shell / end input</span><span class="keys" data-win="Ctrl+D" data-mac="⌃+D"></span></div>
+      <div class="kb"><span class="lbl"><b>Copy / paste</b> in terminal</span><span class="keys" data-win="Ctrl+Shift+C/V" data-mac="⌘+C/V"></span></div>
+      <div class="kb"><span class="lbl"><b>Quit</b> pager (less, man, git log)</span><span class="keys" data-win="q" data-mac="q"></span></div>
+    </div>
+  </section>
+
+  <section class="sec" id="d2-flow">
+    <div class="sec-head"><div class="kicker"><b>08</b> — Full flow &amp; scenarios</div><h2>Real flows you will repeat</h2></div>
+    <div class="flow" style="margin-bottom:22px">
+      <div class="node">Where am I?<small>pwd</small></div><span class="arr">→</span>
+      <div class="node">What's here?<small>ls -la</small></div><span class="arr">→</span>
+      <div class="node">Move<small>cd folder</small></div><span class="arr">→</span>
+      <div class="node">Act<small>mkdir · touch · mv · rm</small></div><span class="arr">→</span>
+      <div class="node">Verify<small>ls again</small></div>
+      <span class="loop">↺ repeat</span>
+    </div>
+    <div class="grid g2">
+      <article class="card"><div class="top"><h4>Scaffold a new project</h4><span class="pill p-common">Common</span></div><p>Build a full folder structure in seconds, then open it.</p>
+<pre class="code" data-lang="sh">mkdir -p portfolio/assets portfolio/css portfolio/js
+cd portfolio
+touch index.html css/style.css js/app.js README.md
+ls -R
+code .</pre></article>
+      <article class="card"><div class="top"><h4>Organize messy downloads</h4><span class="pill p-common">Common</span></div><p>Group files by type with wildcards.</p>
+<pre class="code" data-lang="sh">cd ~/Downloads
+mkdir -p images docs
+mv *.png *.jpg images/
+mv *.pdf docs/</pre></article>
+      <article class="card"><div class="top"><h4>Rename and back up a file</h4><span class="pill p-common">Common</span></div><p>Copy first, then rename the original.</p>
+<pre class="code" data-lang="sh">cp index.html index.backup.html
+mv about.html about-me.html</pre></article>
+      <article class="card"><div class="top"><h4>Delete safely</h4><span class="pill p-care">Careful</span></div><p>Preview what a pattern matches, then delete with confirmation.</p>
+<pre class="code" data-lang="sh">ls *.log
+rm -i *.log</pre></article>
+      <article class="card"><div class="top"><h4>Find where a word is used</h4><span class="pill p-rare">Rare</span></div><p>Search the whole project, skipping heavy folders.</p>
+<pre class="code" data-lang="sh">grep -rn "navbar" . --exclude-dir=node_modules</pre></article>
+      <article class="card"><div class="top"><h4>Save command output to a file</h4><span class="pill p-rare">Rare</span></div><p>Turn any output into a document.</p>
+<pre class="code" data-lang="sh">ls -la &gt; file-list.txt
+git log --oneline &gt;&gt; changelog.md</pre></article>
+      <article class="card"><div class="top"><h4>Lost in the file system</h4><span class="pill p-common">Common</span></div><p>Three commands bring you back to safety.</p>
+<pre class="code" data-lang="sh">pwd
+cd ~
+cd projects/module-1</pre></article>
+      <article class="card"><div class="top"><h4>Run two things in order</h4><span class="pill p-rare">Rare</span></div><p>Chain commands so the second only runs if the first succeeds.</p>
+<pre class="code" data-lang="sh">git add . &amp;&amp; git commit -m "docs: update readme" &amp;&amp; git push</pre></article>
+    </div>
+  </section>
+
+  <section class="sec" id="d2-fix">
+    <div class="sec-head"><div class="kicker"><b>09</b> — Scenarios</div><h2>Troubleshooting the terminal</h2></div>
+    <div class="tbl-wrap"><table>
+      <thead><tr><th>You see</th><th>Why it happens</th><th>Fix</th></tr></thead>
+      <tbody>
+        <tr><td><code>command not found</code></td><td>Typo, tool not installed, or not in PATH.</td><td>Check spelling, install the tool, then close and reopen the terminal.</td></tr>
+        <tr><td><code>No such file or directory</code></td><td>Wrong folder or wrong name.</td><td>Run <code>pwd</code> and <code>ls</code>, then use <kbd>Tab</kbd> to autocomplete.</td></tr>
+        <tr><td><code>Permission denied</code></td><td>You lack rights to that file or folder.</td><td>Mac/Linux: <code>chmod +x</code> or <code>sudo</code> if truly needed. Windows: run terminal as Administrator.</td></tr>
+        <tr><td><code>running scripts is disabled</code></td><td>PowerShell execution policy blocks scripts.</td><td><code>Set-ExecutionPolicy -Scope CurrentUser RemoteSigned</code></td></tr>
+        <tr><td>Terminal "frozen"</td><td>A program is still running (server, watcher).</td><td>Press <kbd>Ctrl</kbd>+<kbd>C</kbd>, or open a new terminal tab.</td></tr>
+        <tr><td>Stuck with <code>&gt;</code> prompt</td><td>An unclosed quote <code>"</code> or bracket.</td><td>Press <kbd>Ctrl</kbd>+<kbd>C</kbd> and retype.</td></tr>
+        <tr><td>Stuck in Vim / less</td><td><code>git commit</code> or <code>man</code> opened an editor/pager.</td><td>Vim: <kbd>Esc</kbd> then <code>:wq</code>. Pager: press <kbd>q</kbd>.</td></tr>
+        <tr><td><code>cd: too many arguments</code></td><td>Folder name has spaces.</td><td>Wrap it in quotes: <code>cd "My Project"</code>.</td></tr>
+        <tr><td><code>File exists</code></td><td><code>mkdir</code> on an existing folder.</td><td>Use <code>mkdir -p</code> or choose another name.</td></tr>
+        <tr><td><code>port 3000 already in use</code></td><td>An old server is still running.</td><td>Stop it with <kbd>Ctrl</kbd>+<kbd>C</kbd>, or find it with <code>ps</code> and <code>kill</code>.</td></tr>
+      </tbody>
+    </table></div>
+  </section>
+
+  <section class="sec" id="d2-danger">
+    <div class="sec-head"><div class="kicker"><b>10</b> — Rare but must know</div><h2>Danger zone</h2><p>Commands that can destroy work in one keystroke.</p></div>
+    <div class="grid g3">
+      <article class="card" style="border-color:rgba(255,107,154,.35)"><div class="top"><span class="cmd" style="color:var(--pink)">rm -rf /</span><span class="pill p-danger">Never</span></div><p>Force-deletes everything from the root. It can wipe the whole system.</p></article>
+      <article class="card" style="border-color:rgba(255,107,154,.35)"><div class="top"><span class="cmd" style="color:var(--pink)">rm -rf *</span><span class="pill p-danger">Danger</span></div><p>Deletes everything in the current folder. Always run <code>pwd</code> first.</p></article>
+      <article class="card" style="border-color:rgba(255,107,154,.35)"><div class="top"><span class="cmd" style="color:var(--pink)">curl … | bash</span><span class="pill p-danger">Danger</span></div><p>Runs a script from the internet without reading it. Only do this for sources you fully trust.</p></article>
+      <article class="card" style="border-color:rgba(255,107,154,.35)"><div class="top"><span class="cmd" style="color:var(--pink)">sudo &lt;anything copied&gt;</span><span class="pill p-danger">Danger</span></div><p>Gives full admin power to a command you may not understand.</p></article>
+      <article class="card" style="border-color:rgba(255,107,154,.35)"><div class="top"><span class="cmd" style="color:var(--pink)">chmod -R 777</span><span class="pill p-danger">Danger</span></div><p>Lets anyone read, write, and run everything. It is a security hole, not a fix.</p></article>
+      <article class="card" style="border-color:rgba(255,107,154,.35)"><div class="top"><span class="cmd" style="color:var(--pink)">&gt; important.txt</span><span class="pill p-danger">Danger</span></div><p>A single <code>&gt;</code> overwrites a file instantly. Use <code>&gt;&gt;</code> to append.</p></article>
+    </div>
+  </section>
+
+  <section class="sec" id="d2-shells">
+    <div class="sec-head"><div class="kicker"><b>11</b> — General explanation</div><h2>Which shell am I using?</h2></div>
+    <div class="grid g4">
+      <article class="card"><h4>Bash</h4><p>Classic Linux shell. On Windows you get it through <b>Git Bash</b>.</p></article>
+      <article class="card"><h4>Zsh</h4><p>Default on macOS. Bash-compatible with nicer autocomplete.</p></article>
+      <article class="card"><h4>PowerShell</h4><p>Windows default. Many Unix names work as aliases, but flags differ.</p></article>
+      <article class="card"><h4>CMD</h4><p>Old Windows shell with different commands (<code>dir</code>, <code>del</code>). Avoid it for this course.</p></article>
+    </div>
+    <div class="callout tip"><span class="ci">✓</span><div><b>Recommendation for Windows:</b> use <b>Git Bash</b> so commands match Mac/Linux tutorials exactly. In VS Code, pick it from the terminal dropdown → "Select Default Profile".</div></div>
+  </section>
+</section>
+
+<!-- ================================================================ DAY 3 -->
+<section class="day" id="day3" data-day="3" hidden>
+  <div class="hero">
+    <div>
+      <div class="eyebrow"><span class="dot"></span>Day 03 · Time travel for code</div>
+      <h1><span class="grad">Git</span><br>Version Control</h1>
+      <p class="lead">Git records snapshots of your project so you can go back in time, branch out safely, and collaborate without overwriting each other. GitHub is a website that hosts Git repositories; it is not Git itself.</p>
+      <div class="chips"><span id="scnTotal">90+ scenarios</span><span>solo · undo · team · conflict</span><span>every git status</span></div>
+    </div>
+    <div class="hero-art">
+      <svg viewBox="0 0 560 400" role="img" aria-label="A glowing constellation of commits forming main and feature branches">
+        <defs>
+          <radialGradient id="d3halo"><stop offset="0" stop-color="#98E8DE" stop-opacity=".28"/><stop offset="1" stop-color="#98E8DE" stop-opacity="0"/></radialGradient>
+        </defs>
+        <ellipse cx="280" cy="210" rx="270" ry="170" fill="url(#d3halo)"/>
+        <g fill="#fff"><circle class="tw" cx="30" cy="40" r="1.4"/><circle class="tw" cx="90" cy="320" r="1"/><circle class="tw" cx="200" cy="30" r="1.2"/><circle class="tw" cx="380" cy="350" r="1.4"/><circle class="tw" cx="520" cy="60" r="1"/><circle class="tw" cx="540" cy="300" r="1.3"/><circle class="tw" cx="300" cy="60" r="1"/><circle class="tw" cx="460" cy="120" r="1.2"/></g>
+        <path id="mainP" d="M30 220 H530" stroke="#98E8DE" stroke-width="3" filter="url(#glow)"/>
+        <path id="featP" d="M130 220 C 170 220, 170 120, 210 120 H 330 C 360 120, 360 220, 390 220" stroke="#A66CFF" stroke-width="3" fill="none" filter="url(#glow)"/>
+        <path d="M200 220 C 222 220, 222 300, 250 300 C 278 300, 278 220, 300 220" stroke="#FFECCB" stroke-width="3" fill="none" filter="url(#glow)"/>
+        <g stroke="#02051c" stroke-width="3">
+          <circle cx="60" cy="220" r="9" fill="#98E8DE"/><circle cx="130" cy="220" r="9" fill="#98E8DE"/><circle cx="200" cy="220" r="9" fill="#98E8DE"/>
+          <circle cx="300" cy="220" r="11" fill="#FFECCB"/><circle cx="390" cy="220" r="11" fill="#C59BFF"/><circle cx="470" cy="220" r="10" fill="#98E8DE"/>
+          <circle cx="210" cy="120" r="9" fill="#A66CFF"/><circle cx="270" cy="120" r="9" fill="#A66CFF"/><circle cx="330" cy="120" r="9" fill="#A66CFF"/>
+          <circle cx="250" cy="300" r="9" fill="#FFECCB"/>
+        </g>
+        <circle r="5" fill="#fff" filter="url(#glow)"><animateMotion dur="7s" repeatCount="indefinite"><mpath href="#mainP"/></animateMotion></circle>
+        <circle r="4" fill="#E3C2FF" filter="url(#glow)"><animateMotion dur="5s" repeatCount="indefinite"><mpath href="#featP"/></animateMotion></circle>
+        <g font-size="11.5">
+          <text x="210" y="96" fill="#C59BFF">feature/login</text>
+          <text x="226" y="334" fill="#FFECCB">fix/navbar</text>
+          <text x="498" y="246" fill="#98E8DE">main</text>
+        </g>
+        <g>
+          <rect x="430" y="158" width="94" height="26" rx="13" fill="#A66CFF" fill-opacity=".22" stroke="#A66CFF"/>
+          <text x="477" y="175" text-anchor="middle" font-size="11" fill="#fff" font-weight="700">HEAD → main</text>
+          <path d="M470 185 V208" stroke="#A66CFF" stroke-dasharray="3 3"/>
+        </g>
+      </svg>
+    </div>
+  </div>
+
+  <nav class="subnav">
+    <a href="#d3-big">Big Picture</a><a href="#d3-rules">Golden Rules</a><a href="#d3-setup">Setup</a><a href="#d3-areas">4 Areas</a><a href="#d3-status">Every Status</a><a href="#d3-cmd">Core Commands</a><a href="#d3-solo">Solo Flow</a><a href="#d3-undo">Undo</a><a href="#d3-team">Team Flow</a><a href="#d3-conflict">Conflicts</a><a href="#d3-trouble">Troubleshoot</a><a href="#d3-rare">Rare Commands</a><a href="#d3-ref">References</a>
+  </nav>
+
+  <section class="sec" id="d3-big" style="padding-top:40px">
+    <div class="finder">
+      <h3>Scenario Finder</h3>
+      <p>Type your situation, like "undo commit", "conflict", "rejected", or "deleted branch".</p>
+      <div class="search"><svg><use href="#i-search"/></svg><input id="gitSearch" type="search" placeholder="Search every Git scenario…" autocomplete="off"></div>
+      <div class="catchips">
+        <a href="#d3-solo">Solo <b data-count="solo">0</b></a>
+        <a href="#d3-undo">Undo &amp; Recover <b data-count="undo">0</b></a>
+        <a href="#d3-team">Team <b data-count="team">0</b></a>
+        <a href="#d3-conflict">Conflicts <b data-count="conflict">0</b></a>
+        <a href="#d3-trouble">Troubleshoot <b data-count="trouble">0</b></a>
+      </div>
+      <div class="found" id="found"></div>
+    </div>
+
+    <div class="sec-head" style="margin-top:70px"><div class="kicker"><b>01</b> — General explanation</div><h2>The big picture</h2></div>
+    <div class="grid g3">
+      <article class="card big"><div class="ico"><svg><use href="#i-history"/></svg></div><h3>Git</h3><p>A version control system installed on your computer. It tracks every change as a snapshot called a commit.</p></article>
+      <article class="card big"><div class="ico"><svg><use href="#i-cloud"/></svg></div><h3>GitHub</h3><p>A cloud service that stores Git repos online. It adds Pull Requests, reviews, issues, and project pages.</p></article>
+      <article class="card big"><div class="ico"><svg><use href="#i-users"/></svg></div><h3>Why it matters</h3><p>You can undo almost any mistake and work in parallel with teammates. Every tech company uses it.</p></article>
+    </div>
+    <h3 class="sub">Vocabulary in one line each</h3>
+    <div class="tbl-wrap"><table>
+      <thead><tr><th>Term</th><th>Meaning</th></tr></thead>
+      <tbody>
+        <tr><td>Repository (repo)</td><td>A project folder tracked by Git; its history lives in the hidden <code>.git</code> folder.</td></tr>
+        <tr><td>Commit</td><td>A saved snapshot of staged changes with a message, author, and date.</td></tr>
+        <tr><td>Hash (SHA)</td><td>The unique ID of a commit, like <code>a1b2c3d</code>. The first 7 characters are usually enough.</td></tr>
+        <tr><td>Branch</td><td>A movable pointer to a commit, used to develop something in isolation.</td></tr>
+        <tr><td><code>main</code></td><td>The default, stable branch. Older repos call it <code>master</code>.</td></tr>
+        <tr><td>HEAD</td><td>"You are here." It points to the branch or commit you currently have checked out.</td></tr>
+        <tr><td>Working directory</td><td>The real files on your disk that you edit.</td></tr>
+        <tr><td>Staging area (index)</td><td>A waiting room where you choose exactly what goes into the next commit.</td></tr>
+        <tr><td>Remote / <code>origin</code></td><td>A copy of the repo on a server. <code>origin</code> is the default name for it.</td></tr>
+        <tr><td>Upstream</td><td>The remote branch your local branch tracks for push and pull.</td></tr>
+        <tr><td>Clone</td><td>Download a full repo with its whole history.</td></tr>
+        <tr><td>Fork</td><td>Your own GitHub copy of someone else's repo.</td></tr>
+        <tr><td>Merge</td><td>Combine the history of two branches.</td></tr>
+        <tr><td>Rebase</td><td>Replay your commits on top of another branch to keep history linear.</td></tr>
+        <tr><td>Pull Request (PR)</td><td>A GitHub request to merge your branch, with discussion and review.</td></tr>
+        <tr><td>Conflict</td><td>Two changes touch the same lines, so Git asks you to decide.</td></tr>
+        <tr><td>Stash</td><td>A temporary shelf for uncommitted work.</td></tr>
+        <tr><td>Tag</td><td>A permanent name on a commit, usually a release like <code>v1.0.0</code>.</td></tr>
+        <tr><td><code>.gitignore</code></td><td>A list of files Git should never track, like <code>node_modules/</code> and <code>.env</code>.</td></tr>
+      </tbody>
+    </table></div>
+  </section>
+
+  <section class="sec" id="d3-rules">
+    <div class="sec-head"><div class="kicker"><b>02</b> — Important points</div><h2>Golden rules</h2></div>
+    <div class="points four">
+      <div class="point"><div><h4>Read <code>git status</code> constantly</h4><p>It tells you where you are and usually prints the exact next command.</p></div></div>
+      <div class="point"><div><h4>Commit small and often</h4><p>One logical change per commit makes history readable and undo painless.</p></div></div>
+      <div class="point"><div><h4>Pull before you start, push when you finish</h4><p>Syncing often keeps conflicts small and rare.</p></div></div>
+      <div class="point"><div><h4>One branch per task</h4><p>Never develop directly on <code>main</code> in a team. Branches are cheap, so use them.</p></div></div>
+      <div class="point"><div><h4>Never rewrite shared history</h4><p>Don't reset, amend, or rebase commits others already pulled. Use <code>git revert</code> instead.</p></div></div>
+      <div class="point"><div><h4><code>--force-with-lease</code>, never <code>--force</code></h4><p>It refuses to overwrite work you haven't seen yet.</p></div></div>
+      <div class="point"><div><h4>Never commit secrets</h4><p>Put <code>.env</code> in <code>.gitignore</code> before your first commit. Pushed secrets must be treated as leaked.</p></div></div>
+      <div class="point"><div><h4>Almost nothing is truly lost</h4><p>Committed work can be recovered with <code>git reflog</code>. Uncommitted work cannot, so commit often.</p></div></div>
+    </div>
+  </section>
+
+  <section class="sec" id="d3-setup">
+    <div class="sec-head"><div class="kicker"><b>03</b> — Full flow</div><h2>One-time setup</h2><p>Do this once per computer.</p></div>
+    <div class="grid g2">
+      <article class="card"><div class="top"><h4>Identity &amp; defaults</h4><span class="pill p-common">Once</span></div><p>Your name and email are stamped on every commit. Use the same email as your GitHub account.</p>
+<pre class="code" data-lang="sh">git --version
+git config --global user.name "Your Name"
+git config --global user.email "you@example.com"
+git config --global init.defaultBranch main
+git config --global core.editor "code --wait"
+git config --global pull.rebase false
+# Windows
+git config --global core.autocrlf true
+# Mac / Linux
+git config --global core.autocrlf input
+# check everything
+git config --list</pre></article>
+      <article class="card"><div class="top"><h4>Connect to GitHub with SSH</h4><span class="pill p-common">Once</span></div><p>GitHub no longer accepts account passwords for Git. Use SSH keys (below) or a Personal Access Token.</p>
+<pre class="code" data-lang="sh">ssh-keygen -t ed25519 -C "you@example.com"
+# press Enter for defaults
+cat ~/.ssh/id_ed25519.pub
+# copy output → GitHub → Settings → SSH and GPG keys → New SSH key
+ssh -T git@github.com
+# "Hi &lt;username&gt;! You've successfully authenticated"</pre>
+      <div class="callout tip" style="margin-top:12px"><span class="ci">i</span><div>Prefer HTTPS? Install the GitHub CLI and run <code>gh auth login</code>. It stores the token for you.</div></div></article>
+    </div>
+  </section>
+
+  <section class="sec" id="d3-areas">
+    <div class="sec-head"><div class="kicker"><b>04</b> — General explanation</div><h2>The four areas of Git</h2><p>Every command moves changes between these four places. Understand this picture and Git stops being magic.</p></div>
+    <figure class="figure">
+      <div class="svg-scroll">
+      <svg viewBox="0 0 1000 462" role="img" aria-label="Working directory, staging area, local repository and remote repository with commands moving changes between them">
+        <defs>
+          <marker id="am" viewBox="0 0 10 10" refX="8" refY="5" markerUnits="userSpaceOnUse" markerWidth="12" markerHeight="12" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#98E8DE"/></marker>
+          <marker id="ap" viewBox="0 0 10 10" refX="8" refY="5" markerUnits="userSpaceOnUse" markerWidth="12" markerHeight="12" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#C59BFF"/></marker>
+          <marker id="ac" viewBox="0 0 10 10" refX="8" refY="5" markerUnits="userSpaceOnUse" markerWidth="11" markerHeight="11" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#FFECCB"/></marker>
+          <style>.lbl4{font-size:13.5px;font-weight:700}</style>
+        </defs>
+        <path d="M910 118 C 910 6, 90 6, 90 116" stroke="#FFECCB" stroke-width="1.6" stroke-dasharray="5 6" fill="none" marker-end="url(#ac)"/>
+        <text x="500" y="22" text-anchor="middle" class="lbl4" fill="#FFECCB">git clone  (first time only: remote → your disk)</text>
+        <path d="M120 118 C 120 66, 373 66, 373 112" stroke="#98E8DE" stroke-width="2.4" fill="none" marker-end="url(#am)"/>
+        <path d="M373 118 C 373 66, 626 66, 626 112" stroke="#98E8DE" stroke-width="2.4" fill="none" marker-end="url(#am)"/>
+        <path d="M626 118 C 626 66, 880 66, 880 112" stroke="#98E8DE" stroke-width="2.4" fill="none" marker-end="url(#am)"/>
+        <text x="246" y="104" text-anchor="middle" class="lbl4" fill="#98E8DE">git add</text>
+        <text x="500" y="104" text-anchor="middle" class="lbl4" fill="#98E8DE">git commit</text>
+        <text x="753" y="104" text-anchor="middle" class="lbl4" fill="#98E8DE">git push</text>
+        <g>
+          <rect x="20" y="118" width="200" height="156" rx="18" fill="#071043" stroke="#FFECCB" stroke-opacity=".7"/>
+          <rect x="273" y="118" width="200" height="156" rx="18" fill="#071043" stroke="#A66CFF"/>
+          <rect x="526" y="118" width="200" height="156" rx="18" fill="#071043" stroke="#98E8DE"/>
+          <rect x="780" y="118" width="200" height="156" rx="18" fill="#071043" stroke="#7DA8FF"/>
+          <g fill="none" stroke-width="2.2" stroke-linejoin="round" stroke-linecap="round">
+            <path d="M96 150h12l5 6h24v26H96z" stroke="#FFECCB"/>
+            <path d="M350 160h46l-6 22h-34z M346 160l8-12h38l8 12" stroke="#C59BFF"/>
+            <path d="M626 146l20 10v22l-20 10-20-10v-22z M606 156l20 10 20-10 M626 166v22" stroke="#98E8DE"/>
+            <path d="M866 182a10 10 0 0 1-1-20 14 14 0 0 1 27-3 9 9 0 0 1 2 23z" stroke="#7DA8FF"/>
+          </g>
+          <g font-family="Space Grotesk" font-weight="700" font-size="17" text-anchor="middle">
+            <text x="120" y="222" fill="#FFECCB">Working Directory</text>
+            <text x="373" y="222" fill="#C59BFF">Staging Area</text>
+            <text x="626" y="222" fill="#98E8DE">Local Repository</text>
+            <text x="880" y="222" fill="#7DA8FF">Remote Repository</text>
+          </g>
+          <g font-size="11.5" text-anchor="middle" fill="#8C92C4">
+            <text x="120" y="246">files you edit</text><text x="373" y="246">draft of next commit</text><text x="626" y="246">.git · your history</text><text x="880" y="246">GitHub · shared</text>
+          </g>
+        </g>
+        <path d="M373 280 C 373 326, 120 326, 120 286" stroke="#C59BFF" stroke-width="2" fill="none" marker-end="url(#ap)"/>
+        <text x="246" y="342" text-anchor="middle" class="lbl4" fill="#C59BFF">git restore --staged</text>
+        <path d="M880 280 C 880 326, 626 326, 626 286" stroke="#C59BFF" stroke-width="2" fill="none" marker-end="url(#ap)"/>
+        <text x="753" y="342" text-anchor="middle" class="lbl4" fill="#C59BFF">git fetch</text>
+        <path d="M880 280 C 880 470, 120 470, 120 286" stroke="#C59BFF" stroke-width="2" fill="none" marker-end="url(#ap)" class="dash" stroke-dasharray="8 6"/>
+        <text x="500" y="452" text-anchor="middle" class="lbl4" fill="#C59BFF">git pull  =  fetch + merge into your files</text>
+      </svg>
+      </div>
+      <figcaption>Forward: <b>add → commit → push</b>. Backward: <b>fetch / pull</b> bring others' work in, <b>restore --staged</b> unstages, and <b>git switch</b> / <b>git restore --source</b> load a commit back into your files.</figcaption>
+    </figure>
+  </section>
+
+  <section class="sec" id="d3-status">
+    <div class="sec-head"><div class="kicker"><b>05</b> — Important points</div><h2>Every file status &amp; branch state</h2><p>The life of a file, and every message <code>git status</code> can show you.</p></div>
+    <figure class="figure">
+      <div class="svg-scroll">
+      <svg viewBox="0 0 900 380" role="img" aria-label="File lifecycle: untracked, unmodified, modified, staged">
+        <defs>
+          <marker id="lmP" viewBox="0 0 10 10" refX="8" refY="5" markerUnits="userSpaceOnUse" markerWidth="13" markerHeight="13" orient="auto"><path d="M0 0L10 5L0 10z" fill="#C59BFF"/></marker>
+          <marker id="lmC" viewBox="0 0 10 10" refX="8" refY="5" markerUnits="userSpaceOnUse" markerWidth="13" markerHeight="13" orient="auto"><path d="M0 0L10 5L0 10z" fill="#FFECCB"/></marker>
+          <marker id="lmM" viewBox="0 0 10 10" refX="8" refY="5" markerUnits="userSpaceOnUse" markerWidth="13" markerHeight="13" orient="auto"><path d="M0 0L10 5L0 10z" fill="#98E8DE"/></marker>
+          <marker id="lmK" viewBox="0 0 10 10" refX="8" refY="5" markerUnits="userSpaceOnUse" markerWidth="13" markerHeight="13" orient="auto"><path d="M0 0L10 5L0 10z" fill="#FF6B9A"/></marker>
+          <style>.ll{font-size:13px;font-weight:700;paint-order:stroke;stroke:#050b36;stroke-width:5px;stroke-linejoin:round}</style>
+        </defs>
+        <g stroke-dasharray="4 6" stroke-opacity=".35">
+          <path d="M112 66V370" stroke="#FF6B9A"/><path d="M337 66V370" stroke="#98E8DE"/><path d="M562 66V370" stroke="#FFECCB"/><path d="M787 66V370" stroke="#A66CFF"/>
+        </g>
+        <g font-family="Space Grotesk" font-weight="700" font-size="15" text-anchor="middle">
+          <rect x="22" y="20" width="180" height="44" rx="22" fill="#FF6B9A" fill-opacity=".14" stroke="#FF6B9A"/><text x="112" y="47" fill="#FF9EC0">Untracked</text>
+          <rect x="247" y="20" width="180" height="44" rx="22" fill="#98E8DE" fill-opacity=".14" stroke="#98E8DE"/><text x="337" y="47" fill="#98E8DE">Unmodified</text>
+          <rect x="472" y="20" width="180" height="44" rx="22" fill="#FFECCB" fill-opacity=".1" stroke="#FFECCB"/><text x="562" y="47" fill="#FFECCB">Modified</text>
+          <rect x="697" y="20" width="180" height="44" rx="22" fill="#A66CFF" fill-opacity=".18" stroke="#A66CFF"/><text x="787" y="47" fill="#C59BFF">Staged</text>
+        </g>
+        <g stroke-width="2.4" fill="none">
+          <path d="M112 110H780" stroke="#C59BFF" marker-end="url(#lmP)"/>
+          <path d="M337 170H555" stroke="#FFECCB" marker-end="url(#lmC)"/>
+          <path d="M562 230H780" stroke="#C59BFF" marker-end="url(#lmP)"/>
+          <path d="M787 290H344" stroke="#98E8DE" marker-end="url(#lmM)"/>
+          <path d="M337 350H119" stroke="#FF6B9A" marker-end="url(#lmK)"/>
+        </g>
+        <g fill="#fff"><circle cx="112" cy="110" r="5"/><circle cx="337" cy="170" r="5"/><circle cx="562" cy="230" r="5"/><circle cx="787" cy="290" r="5"/><circle cx="337" cy="350" r="5"/></g>
+        <text x="450" y="98" text-anchor="middle" class="ll" fill="#C59BFF">git add  (start tracking a new file)</text>
+        <text x="450" y="158" text-anchor="middle" class="ll" fill="#FFECCB">you edit the file</text>
+        <text x="672" y="218" text-anchor="middle" class="ll" fill="#C59BFF">git add</text>
+        <text x="562" y="278" text-anchor="middle" class="ll" fill="#98E8DE">git commit  (snapshot saved)</text>
+        <text x="225" y="338" text-anchor="middle" class="ll" fill="#FF9EC0">git rm --cached</text>
+      </svg>
+      </div>
+      <figcaption>Ignored files (matched by <code>.gitignore</code>) live outside this cycle; Git never sees them.</figcaption>
+    </figure>
+
+    <h3 class="sub"><span class="pill p-common">File</span> Every file status</h3>
+    <div class="tbl-wrap"><table>
+      <thead><tr><th>Status</th><th><code>git status</code> says</th><th><code>-s</code></th><th>Meaning</th><th>Next move</th></tr></thead>
+      <tbody>
+        <tr><td>Untracked</td><td>Untracked files</td><td><code>??</code></td><td>New file Git has never seen.</td><td><code>git add &lt;file&gt;</code></td></tr>
+        <tr><td>Modified</td><td>Changes not staged for commit · modified</td><td><code>&nbsp;M</code></td><td>Tracked file edited, not staged yet.</td><td><code>git add</code> or <code>git restore</code></td></tr>
+        <tr><td>Staged (new)</td><td>Changes to be committed · new file</td><td><code>A&nbsp;</code></td><td>New file ready for the next commit.</td><td><code>git commit</code></td></tr>
+        <tr><td>Staged (modified)</td><td>Changes to be committed · modified</td><td><code>M&nbsp;</code></td><td>Edits ready for the next commit.</td><td><code>git commit</code></td></tr>
+        <tr><td>Staged + edited again</td><td>Appears in both sections</td><td><code>MM</code></td><td>The newer edit is not staged yet.</td><td><code>git add</code> again</td></tr>
+        <tr><td>Deleted</td><td>deleted: file</td><td><code>&nbsp;D</code> / <code>D&nbsp;</code></td><td>Removed from disk (left) or removal staged (right).</td><td><code>git rm</code> or <code>git restore</code></td></tr>
+        <tr><td>Renamed</td><td>renamed: a → b</td><td><code>R&nbsp;</code></td><td>Git detected a move or rename.</td><td><code>git commit</code></td></tr>
+        <tr><td>Ignored</td><td>(hidden by default)</td><td><code>!!</code></td><td>Matches <code>.gitignore</code>; never tracked.</td><td>Nothing; see with <code>--ignored</code></td></tr>
+        <tr><td>Clean</td><td>nothing to commit, working tree clean</td><td>(empty)</td><td>Everything is committed.</td><td>Keep coding or push</td></tr>
+        <tr><td>Both modified</td><td>Unmerged paths · both modified</td><td><code>UU</code></td><td>Conflict: both sides changed the same lines.</td><td>Resolve → <code>git add</code></td></tr>
+        <tr><td>Deleted by them / us</td><td>deleted by them · deleted by us</td><td><code>UD</code> / <code>DU</code></td><td>One side deleted, the other edited.</td><td><code>git add</code> to keep, <code>git rm</code> to delete</td></tr>
+        <tr><td>Both added</td><td>both added</td><td><code>AA</code></td><td>Both sides created a file with the same name.</td><td>Resolve → <code>git add</code></td></tr>
+      </tbody>
+    </table></div>
+
+    <h3 class="sub"><span class="pill p-rare">Branch</span> Every branch &amp; repo state</h3>
+    <div class="tbl-wrap"><table>
+      <thead><tr><th>State</th><th>Message you see</th><th>Meaning</th><th>Next move</th></tr></thead>
+      <tbody>
+        <tr><td>Up to date</td><td>Your branch is up to date with 'origin/main'.</td><td>Local and remote match (as of your last fetch).</td><td>—</td></tr>
+        <tr><td>Ahead</td><td>Your branch is ahead of 'origin/main' by 2 commits.</td><td>You have commits not pushed yet.</td><td><code>git push</code></td></tr>
+        <tr><td>Behind</td><td>…behind 'origin/main' by 3 commits, and can be fast-forwarded.</td><td>Remote has new commits you don't have.</td><td><code>git pull</code></td></tr>
+        <tr><td>Diverged</td><td>…have diverged, and have 1 and 2 different commits each.</td><td>Both sides have new commits.</td><td><code>git pull --rebase</code> then <code>git push</code></td></tr>
+        <tr><td>No upstream</td><td>The current branch has no upstream branch.</td><td>This branch was never pushed.</td><td><code>git push -u origin &lt;branch&gt;</code></td></tr>
+        <tr><td>Detached HEAD</td><td>HEAD detached at a1b2c3d</td><td>You are on a commit, not on a branch.</td><td><code>git switch -c &lt;new&gt;</code> or <code>git switch main</code></td></tr>
+        <tr><td>Merging</td><td>You have unmerged paths. (fix conflicts and run "git commit")</td><td>A merge is paused by conflicts.</td><td>Resolve → <code>git commit</code>, or <code>git merge --abort</code></td></tr>
+        <tr><td>Rebasing</td><td>rebase in progress; onto 9f8e7d6</td><td>A rebase is paused.</td><td><code>git rebase --continue</code> / <code>--abort</code></td></tr>
+        <tr><td>Cherry-picking</td><td>You are currently cherry-picking commit…</td><td>A cherry-pick is paused.</td><td><code>git cherry-pick --continue</code> / <code>--abort</code></td></tr>
+        <tr><td>Reverting</td><td>You are currently reverting commit…</td><td>A revert is paused by conflicts.</td><td><code>git revert --continue</code> / <code>--abort</code></td></tr>
+        <tr><td>Bisecting</td><td>You are currently bisecting.</td><td>A bug hunt is in progress.</td><td><code>git bisect reset</code> when done</td></tr>
+        <tr><td>Not a repo</td><td>fatal: not a git repository</td><td>This folder has no <code>.git</code>.</td><td><code>cd</code> to the project, or <code>git init</code></td></tr>
+      </tbody>
+    </table></div>
+  </section>
+
+  <section class="sec" id="d3-cmd">
+    <div class="sec-head"><div class="kicker"><b>06</b> — Most used</div><h2>Core commands</h2><p>These sixteen cover about 90% of daily Git work.</p></div>
+    <div class="grid g4">
+      <article class="card"><span class="cmd">git init</span><p>Turns the current folder into a Git repository. Run it once per project.</p></article>
+      <article class="card"><span class="cmd">git clone &lt;url&gt;</span><p>Downloads a repo with its full history. It also sets up <code>origin</code> for you.</p></article>
+      <article class="card"><span class="cmd">git status</span><p>Shows what changed, what is staged, and what to do next.</p></article>
+      <article class="card"><span class="cmd">git add &lt;file&gt; | .</span><p>Moves changes into the staging area. <code>.</code> means everything in this folder.</p></article>
+      <article class="card"><span class="cmd">git commit -m "msg"</span><p>Saves a snapshot of staged changes with a message.</p></article>
+      <article class="card"><span class="cmd">git log --oneline</span><p>Lists commit history. Add <code>--graph --all</code> to see branches.</p></article>
+      <article class="card"><span class="cmd">git diff</span><p>Shows unstaged line changes. <code>--staged</code> shows what will be committed.</p></article>
+      <article class="card"><span class="cmd">git branch</span><p>Lists branches. <code>-d name</code> deletes a merged one.</p></article>
+      <article class="card"><span class="cmd">git switch -c &lt;name&gt;</span><p>Creates a new branch and moves to it. Drop <code>-c</code> to switch to an existing one.</p></article>
+      <article class="card"><span class="cmd">git merge &lt;branch&gt;</span><p>Brings another branch's commits into the current branch.</p></article>
+      <article class="card"><span class="cmd">git remote -v</span><p>Shows connected remotes and their URLs.</p></article>
+      <article class="card"><span class="cmd">git push</span><p>Uploads local commits. First push of a branch needs <code>-u origin &lt;branch&gt;</code>.</p></article>
+      <article class="card"><span class="cmd">git pull</span><p>Fetches remote commits and merges them into your branch.</p></article>
+      <article class="card"><span class="cmd">git fetch</span><p>Downloads remote changes without touching your files. A safe way to peek.</p></article>
+      <article class="card"><span class="cmd">git restore &lt;file&gt;</span><p>Discards uncommitted edits. <code>--staged</code> unstages instead.</p></article>
+      <article class="card"><span class="cmd">git stash</span><p>Shelves uncommitted work temporarily. <code>git stash pop</code> brings it back.</p></article>
+    </div>
+  </section>
+
+  <div class="chapter">Scenarios</div>
+
+  <section class="sec" id="d3-solo">
+    <div class="sec-head"><div class="kicker"><b>07</b> — Full flow · working alone</div><h2>Solo flow</h2><p>The loop you will repeat dozens of times a day.</p></div>
+    <div class="flow">
+      <div class="node">Edit files<small>VS Code</small></div><span class="arr">→</span>
+      <div class="node">Check<small>git status · git diff</small></div><span class="arr">→</span>
+      <div class="node">Stage<small>git add</small></div><span class="arr">→</span>
+      <div class="node">Snapshot<small>git commit -m</small></div><span class="arr">→</span>
+      <div class="node">Backup online<small>git push</small></div>
+      <span class="loop">↺ repeat all day</span>
+    </div>
+    <h3 class="sub">Commit message convention</h3>
+    <div class="tbl-wrap"><table>
+      <thead><tr><th>Prefix</th><th>Use for</th><th>Example</th></tr></thead>
+      <tbody>
+        <tr><td><code>feat:</code></td><td>A new feature</td><td><code>feat: add contact form</code></td></tr>
+        <tr><td><code>fix:</code></td><td>A bug fix</td><td><code>fix: navbar overflow on mobile</code></td></tr>
+        <tr><td><code>docs:</code></td><td>Documentation only</td><td><code>docs: add setup steps to README</code></td></tr>
+        <tr><td><code>style:</code></td><td>Formatting, no logic change</td><td><code>style: format with prettier</code></td></tr>
+        <tr><td><code>refactor:</code></td><td>Restructure without changing behavior</td><td><code>refactor: split app.js into modules</code></td></tr>
+        <tr><td><code>test:</code></td><td>Adding or fixing tests</td><td><code>test: cover login validation</code></td></tr>
+        <tr><td><code>chore:</code></td><td>Tooling, config, dependencies</td><td><code>chore: add .gitignore</code></td></tr>
+      </tbody>
+    </table></div>
+    <div class="callout tip"><span class="ci">✓</span><div><b>Good message rule:</b> imperative mood, under ~50 characters, says <i>what</i> changed. "fix: login button color" beats "update" or "asdf".</div></div>
+    <div class="scn-grid" data-cat="solo"></div><div class="empty" data-empty="solo">No solo scenario matches your search.</div>
+  </section>
+
+  <section class="sec" id="d3-undo">
+    <div class="sec-head"><div class="kicker"><b>08</b> — Scenarios · how to go back</div><h2>Undo &amp; recover</h2><p>First ask one question: <b>have I pushed it yet?</b> If not, you can rewrite freely. If yes, add a new commit that reverses it.</p></div>
+    <div class="tbl-wrap"><table>
+      <thead><tr><th>I want to…</th><th>Not pushed yet (private)</th><th>Already pushed (shared)</th></tr></thead>
+      <tbody>
+        <tr><td>Throw away edits in a file</td><td><code>git restore &lt;file&gt;</code></td><td>Same; uncommitted work is never shared</td></tr>
+        <tr><td>Unstage a file</td><td><code>git restore --staged &lt;file&gt;</code></td><td>Same</td></tr>
+        <tr><td>Fix the last commit</td><td><code>git commit --amend</code></td><td>Make a new fix commit</td></tr>
+        <tr><td>Undo the last commit</td><td><code>git reset --soft HEAD~1</code></td><td><code>git revert HEAD</code></td></tr>
+        <tr><td>Undo an older commit</td><td><code>git rebase -i</code> (drop it)</td><td><code>git revert &lt;hash&gt;</code></td></tr>
+        <tr><td>Combine messy commits</td><td><code>git reset --soft HEAD~3</code> + commit</td><td>Leave it, or squash when merging the PR</td></tr>
+        <tr><td>Find "lost" commits</td><td><code>git reflog</code></td><td><code>git reflog</code></td></tr>
+      </tbody>
+    </table></div>
+
+    <h3 class="sub">The three tools: restore vs reset vs revert</h3>
+    <div class="grid g3">
+      <article class="card"><div class="top"><span class="cmd">git restore</span><span class="pill p-safe">Files</span></div><p>Changes <b>files</b> in your working directory or staging area. It never touches commit history.</p></article>
+      <article class="card"><div class="top"><span class="cmd">git reset</span><span class="pill p-care">Rewrites</span></div><p>Moves your <b>branch pointer</b> back to an older commit. Only use it on commits you haven't pushed.</p></article>
+      <article class="card"><div class="top"><span class="cmd">git revert</span><span class="pill p-safe">Safe for teams</span></div><p>Adds a <b>new commit</b> that does the opposite of an old one. History stays intact.</p></article>
+    </div>
+
+    <h3 class="sub">git reset modes, visualized</h3>
+    <div class="modes">
+      <div class="mode"><h4>--soft</h4><p>Undo the commit, keep everything staged. Perfect for redoing a commit.</p>
+        <div class="zones"><div class="z-move">HEAD<small>moved back</small></div><div class="z-keep">Staging<small>kept</small></div><div class="z-keep">Files<small>kept</small></div></div></div>
+      <div class="mode"><h4>--mixed <span style="font-size:12px;color:var(--muted)">(default)</span></h4><p>Undo the commit and unstage. Your edits stay in the files.</p>
+        <div class="zones"><div class="z-move">HEAD<small>moved back</small></div><div class="z-move">Staging<small>reset</small></div><div class="z-keep">Files<small>kept</small></div></div></div>
+      <div class="mode" style="border-color:rgba(255,107,154,.4)"><h4 style="color:var(--pink)">--hard</h4><p>Undo the commit and wipe the changes. Uncommitted work is gone forever.</p>
+        <div class="zones"><div class="z-move">HEAD<small>moved back</small></div><div class="z-lose">Staging<small>wiped</small></div><div class="z-lose">Files<small>wiped</small></div></div></div>
+    </div>
+    <div class="scn-grid" data-cat="undo"></div><div class="empty" data-empty="undo">No undo scenario matches your search.</div>
+  </section>
+
+  <section class="sec" id="d3-team">
+    <div class="sec-head"><div class="kicker"><b>09</b> — Full flow · working together</div><h2>Team flow</h2><p>The GitHub flow: everyone works on their own branch, and changes reach <code>main</code> only through reviewed Pull Requests.</p></div>
+    <figure class="figure">
+      <div class="svg-scroll">
+      <svg viewBox="0 0 920 340" role="img" aria-label="Two teammates branch from main, open pull requests, and merge back">
+        <path d="M40 180 H890" stroke="#98E8DE" stroke-width="3.5" filter="url(#glow)"/>
+        <path d="M200 180 C 240 180, 240 80, 280 80 H 420 C 460 80, 460 180, 500 180" stroke="#A66CFF" stroke-width="3" fill="none" filter="url(#glow)"/>
+        <path d="M330 180 C 370 180, 370 270, 410 270 H 700 C 740 270, 740 180, 770 180" stroke="#FFECCB" stroke-width="3" fill="none" filter="url(#glow)"/>
+        <path d="M500 192 L540 258" stroke="#98E8DE" stroke-width="1.6" stroke-dasharray="4 4" fill="none"/>
+        <g stroke="#02051c" stroke-width="3">
+          <circle cx="80" cy="180" r="9" fill="#98E8DE"/><circle cx="200" cy="180" r="9" fill="#98E8DE"/><circle cx="330" cy="180" r="9" fill="#98E8DE"/><circle cx="500" cy="180" r="12" fill="#C59BFF"/><circle cx="770" cy="180" r="12" fill="#FFECCB"/><circle cx="850" cy="180" r="9" fill="#98E8DE"/>
+          <circle cx="280" cy="80" r="8" fill="#A66CFF"/><circle cx="350" cy="80" r="8" fill="#A66CFF"/><circle cx="420" cy="80" r="8" fill="#A66CFF"/>
+          <circle cx="410" cy="270" r="8" fill="#FFECCB"/><circle cx="475" cy="270" r="8" fill="#FFECCB"/><circle cx="540" cy="270" r="10" fill="#98E8DE"/><circle cx="620" cy="270" r="8" fill="#FFECCB"/><circle cx="700" cy="270" r="8" fill="#FFECCB"/>
+        </g>
+        <g font-family="Space Grotesk" font-weight="700" text-anchor="middle">
+          <circle cx="120" cy="72" r="20" fill="#A66CFF"/><text x="120" y="78" font-size="15" fill="#02051c">A</text>
+          <text x="120" y="114" font-size="13" fill="#C59BFF">Alice</text>
+          <circle cx="120" cy="262" r="20" fill="#FFECCB"/><text x="120" y="268" font-size="15" fill="#02051c">B</text>
+          <text x="120" y="304" font-size="13" fill="#FFECCB">Budi</text>
+        </g>
+        <g font-size="12" text-anchor="middle">
+          <text x="350" y="58" fill="#C59BFF">feature/login</text>
+          <text x="555" y="302" fill="#FFECCB">fix/navbar</text>
+          <text x="80" y="210" fill="#8C92C4">git clone</text>
+          <text x="552" y="232" text-anchor="start" fill="#98E8DE">git merge origin/main</text>
+          <text x="905" y="160" text-anchor="end" fill="#98E8DE">main (protected)</text>
+        </g>
+        <rect x="515" y="108" width="126" height="26" rx="13" fill="#A66CFF" fill-opacity=".2" stroke="#A66CFF"/><text x="578" y="125" text-anchor="middle" font-size="11.5" fill="#fff">PR #12 ✓ merged</text>
+        <rect x="785" y="208" width="126" height="26" rx="13" fill="#FFECCB" fill-opacity=".12" stroke="#FFECCB"/><text x="848" y="225" text-anchor="middle" font-size="11.5" fill="#FFECCB">PR #13 ✓ merged</text>
+      </svg>
+      </div>
+      <figcaption>Budi pulls Alice's merged work into his branch before his own PR is merged, which keeps conflicts small.</figcaption>
+    </figure>
+
+    <h3 class="sub">The 10-step team loop</h3>
+    <div class="steps">
+      <div class="step"><h4>Get the project</h4><p>Clone once. Every later session starts at step 2.</p>
+<pre class="code" data-lang="sh">git clone git@github.com:team/project.git
+cd project</pre></div>
+      <div class="step"><h4>Start from the latest main</h4><p>Never begin a task on an outdated base.</p>
+<pre class="code" data-lang="sh">git switch main
+git pull</pre></div>
+      <div class="step"><h4>Create a task branch</h4><p>Name it by type and topic: <code>feature/</code>, <code>fix/</code>, <code>docs/</code>, <code>chore/</code>.</p>
+<pre class="code" data-lang="sh">git switch -c feature/login-form</pre></div>
+      <div class="step"><h4>Work in small commits</h4><p>Commit each logical step with a clear message.</p>
+<pre class="code" data-lang="sh">git add src/login.html
+git commit -m "feat: add login form markup"</pre></div>
+      <div class="step"><h4>Push the branch</h4><p><code>-u</code> links it to the remote so future pushes are just <code>git push</code>.</p>
+<pre class="code" data-lang="sh">git push -u origin feature/login-form</pre></div>
+      <div class="step"><h4>Open a Pull Request</h4><p>On GitHub click <b>Compare &amp; pull request</b>. Describe what changed, why, and how to test it.</p>
+<pre class="code" data-lang="sh"># or from the terminal with GitHub CLI
+gh pr create --fill</pre></div>
+      <div class="step"><h4>Review &amp; feedback</h4><p>Teammates comment; you fix and push again. The PR updates automatically.</p>
+<pre class="code" data-lang="sh">git commit -am "fix: address review comments"
+git push</pre></div>
+      <div class="step"><h4>Stay in sync with main</h4><p>If main moved while you worked, bring it into your branch and resolve conflicts locally.</p>
+<pre class="code" data-lang="sh">git fetch origin
+git merge origin/main
+git push</pre></div>
+      <div class="step"><h4>Merge the PR</h4><p>After approval and green checks, click merge on GitHub (merge, squash, or rebase).</p></div>
+      <div class="step"><h4>Clean up</h4><p>Delete the branch and go back to an up-to-date main for the next task.</p>
+<pre class="code" data-lang="sh">git switch main
+git pull
+git branch -d feature/login-form
+git fetch --prune</pre></div>
+    </div>
+
+    <h3 class="sub">PR merge strategies</h3>
+    <div class="tbl-wrap"><table>
+      <thead><tr><th>Button on GitHub</th><th>Result</th><th>Best when</th></tr></thead>
+      <tbody>
+        <tr><td>Create a merge commit</td><td>Keeps all branch commits plus one merge commit.</td><td>You want complete, true history.</td></tr>
+        <tr><td>Squash and merge</td><td>All branch commits become one commit on main.</td><td>The branch has messy "wip" commits. Most teams' default.</td></tr>
+        <tr><td>Rebase and merge</td><td>Replays each commit on top of main, no merge commit.</td><td>Commits are already clean and you want a linear log.</td></tr>
+      </tbody>
+    </table></div>
+
+    <h3 class="sub">Merge vs rebase, visualized</h3>
+    <figure class="figure">
+      <div class="svg-scroll">
+      <svg viewBox="0 0 920 280" role="img" aria-label="Merge keeps branches and adds a merge commit; rebase makes history linear">
+        <g font-family="Space Grotesk" font-weight="700" font-size="18"><text x="20" y="34" fill="#98E8DE">git merge</text><text x="490" y="34" fill="#C59BFF">git rebase</text></g>
+        <path d="M455 20V260" stroke="#98E8DE" stroke-opacity=".15"/>
+        <path d="M50 180H380" stroke="#98E8DE" stroke-width="3"/>
+        <path d="M130 180 C 160 180, 160 90, 190 90 H 290 C 330 90, 340 180, 380 180" stroke="#A66CFF" stroke-width="3" fill="none"/>
+        <g font-size="13" font-weight="700" text-anchor="middle" stroke="#02051c" stroke-width="3">
+          <circle cx="50" cy="180" r="16" fill="#98E8DE"/><circle cx="130" cy="180" r="16" fill="#98E8DE"/><circle cx="250" cy="180" r="16" fill="#98E8DE"/>
+          <circle cx="190" cy="90" r="16" fill="#A66CFF"/><circle cx="290" cy="90" r="16" fill="#A66CFF"/>
+          <circle cx="380" cy="180" r="20" fill="#FFECCB"/>
+        </g>
+        <g font-size="13" font-weight="700" text-anchor="middle" fill="#02051c"><text x="50" y="185">A</text><text x="130" y="185">B</text><text x="250" y="185">C</text><text x="190" y="95">D</text><text x="290" y="95">E</text><text x="380" y="185">M</text></g>
+        <text x="20" y="240" font-size="12.5" fill="#B8BCE0">True history is preserved; adds merge commit M.</text>
+        <text x="20" y="260" font-size="12.5" fill="#7CF0B5">Safe on shared branches.</text>
+        <path d="M520 180H880" stroke="#98E8DE" stroke-width="3"/>
+        <g stroke="#A66CFF" stroke-dasharray="4 4" fill="none" opacity=".45"><circle cx="660" cy="90" r="14"/><circle cx="740" cy="90" r="14"/><path d="M660 104 C 700 140, 760 150, 780 164 M740 104 C 790 130, 840 150, 860 164"/></g>
+        <g font-size="11" text-anchor="middle" fill="#8C92C4" opacity=".7"><text x="660" y="94">D</text><text x="740" y="94">E</text></g>
+        <g stroke="#02051c" stroke-width="3">
+          <circle cx="520" cy="180" r="16" fill="#98E8DE"/><circle cx="600" cy="180" r="16" fill="#98E8DE"/><circle cx="690" cy="180" r="16" fill="#98E8DE"/>
+          <circle cx="780" cy="180" r="16" fill="#A66CFF"/><circle cx="860" cy="180" r="16" fill="#A66CFF"/>
+        </g>
+        <g font-size="13" font-weight="700" text-anchor="middle" fill="#02051c"><text x="520" y="185">A</text><text x="600" y="185">B</text><text x="690" y="185">C</text><text x="780" y="185">D'</text><text x="860" y="185">E'</text></g>
+        <text x="700" y="58" text-anchor="middle" font-size="11.5" fill="#C59BFF">replayed with new hashes</text>
+        <text x="490" y="240" font-size="12.5" fill="#B8BCE0">Linear history; D and E get new hashes.</text>
+        <text x="490" y="260" font-size="12.5" fill="#FF9EC0">Only on your own, unshared branch.</text>
+      </svg>
+      </div>
+    </figure>
+    <div class="scn-grid" data-cat="team"></div><div class="empty" data-empty="team">No team scenario matches your search.</div>
+  </section>
+
+  <section class="sec" id="d3-conflict">
+    <div class="sec-head"><div class="kicker"><b>10</b> — Scenarios · when changes collide</div><h2>Merge conflicts</h2><p>A conflict happens when two branches change the same lines, or one edits a file the other deleted. Git pauses and asks a human to decide; it is normal, not an error.</p></div>
+    <figure class="figure">
+      <div class="svg-scroll">
+      <svg viewBox="0 0 820 270" role="img" aria-label="Two branches change the same line and collide into a conflict that you resolve">
+        <defs><radialGradient id="boom"><stop offset="0" stop-color="#FFECCB"/><stop offset=".4" stop-color="#FF6B9A"/><stop offset="1" stop-color="#FF6B9A" stop-opacity="0"/></radialGradient>
+        <marker id="ak" viewBox="0 0 10 10" refX="8" refY="5" markerUnits="userSpaceOnUse" markerWidth="13" markerHeight="13" orient="auto"><path d="M0 0L10 5L0 10z" fill="#FFECCB"/></marker></defs>
+        <rect x="20" y="30" width="250" height="62" rx="12" fill="#071043" stroke="#98E8DE"/>
+        <text x="36" y="54" font-size="11" fill="#98E8DE">main · Ani changed line 12</text>
+        <text x="36" y="78" font-size="14" fill="#fff">&lt;h1&gt;Welcome&lt;/h1&gt;</text>
+        <rect x="20" y="178" width="250" height="62" rx="12" fill="#071043" stroke="#A66CFF"/>
+        <text x="36" y="202" font-size="11" fill="#C59BFF">feature · Budi changed line 12</text>
+        <text x="36" y="226" font-size="14" fill="#fff">&lt;h1&gt;Hello RevoU&lt;/h1&gt;</text>
+        <path d="M270 61 C 330 61, 350 130, 392 133" stroke="#98E8DE" stroke-width="2.5" fill="none" class="dash" stroke-dasharray="7 6"/>
+        <path d="M270 209 C 330 209, 350 140, 392 137" stroke="#A66CFF" stroke-width="2.5" fill="none" class="dash" stroke-dasharray="7 6"/>
+        <circle cx="410" cy="135" r="46" fill="url(#boom)" class="ping"/>
+        <path d="M418 100 L398 138 L414 138 L402 172 L428 128 L412 128 Z" fill="#FFECCB" stroke="#02051c" stroke-width="1.5"/>
+        <text x="410" y="204" text-anchor="middle" font-family="Space Grotesk" font-weight="700" font-size="17" letter-spacing="3" fill="#FF9EC0">CONFLICT</text>
+        <text x="410" y="224" text-anchor="middle" font-size="11" fill="#8C92C4">index.html · line 12</text>
+        <path d="M462 135 H560" stroke="#FFECCB" stroke-width="2" marker-end="url(#ak)"/>
+        <text x="511" y="124" text-anchor="middle" font-size="11.5" fill="#FFECCB">you decide</text>
+        <rect x="570" y="98" width="232" height="76" rx="14" fill="#071043" stroke="#FFECCB"/>
+        <circle cx="782" cy="98" r="12" fill="#7CF0B5"/><path d="M776 98l4 4 8-8" stroke="#02051c" stroke-width="2.4" fill="none"/>
+        <text x="586" y="122" font-size="11" fill="#FFECCB">resolved · git add · commit</text>
+        <text x="586" y="150" font-size="13" fill="#fff">&lt;h1&gt;Welcome to RevoU&lt;/h1&gt;</text>
+      </svg>
+      </div>
+    </figure>
+
+    <div class="grid g2" style="margin-top:18px">
+      <article class="card"><h4>What a conflict looks like inside the file</h4><p>Git writes both versions between markers. Everything between the markers must become one final version.</p>
+        <div class="cw" style="margin-top:12px"><div class="cw-bar"><i></i><i></i><i></i><span>index.html — conflict</span></div>
+          <div class="vsbar"><span>Accept Current Change</span>|<span>Accept Incoming Change</span>|<span>Accept Both Changes</span>|<span>Compare Changes</span></div>
+<pre class="code-raw" data-lang="conflict">&lt;nav&gt;...&lt;/nav&gt;
+&lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD
+&lt;h1&gt;Welcome&lt;/h1&gt;
+=======
+&lt;h1&gt;Hello RevoU&lt;/h1&gt;
+&gt;&gt;&gt;&gt;&gt;&gt;&gt; feature/greeting
+&lt;p&gt;Intro text&lt;/p&gt;</pre></div>
+      </article>
+      <article class="card"><h4>Read the markers</h4>
+        <div class="tbl-wrap" style="margin-top:12px"><table style="min-width:0"><tbody>
+          <tr><td><code>&lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD</code></td><td>Start of <b>your current</b> branch's version.</td></tr>
+          <tr><td><code>=======</code></td><td>Divider between the two versions.</td></tr>
+          <tr><td><code>&gt;&gt;&gt;&gt;&gt;&gt;&gt; branch</code></td><td>End of the <b>incoming</b> branch's version.</td></tr>
+        </tbody></table></div>
+        <div class="callout warn"><span class="ci">!</span><div><b>Ours vs theirs flips during rebase.</b> In a merge, "current/ours" = your branch. In a rebase, "current/ours" = the branch you rebase onto (e.g. main), and "incoming/theirs" = your commits.</div></div>
+      </article>
+    </div>
+
+    <h3 class="sub">Universal resolution flow</h3>
+    <div class="steps">
+      <div class="step"><h4>Don't panic, read status</h4><p>Conflicted files are listed under "Unmerged paths" as <code>both modified</code>.</p>
+<pre class="code" data-lang="sh">git status
+git diff --name-only --diff-filter=U</pre></div>
+      <div class="step"><h4>Open each file and decide</h4><p>Keep current, incoming, both, or write a new combined version. Delete all three marker lines.</p></div>
+      <div class="step"><h4>Search for leftover markers</h4><p>A forgotten <code>&lt;&lt;&lt;&lt;&lt;&lt;&lt;</code> will break your code.</p>
+<pre class="code" data-lang="sh">grep -rn "&lt;&lt;&lt;&lt;&lt;&lt;&lt;\|&gt;&gt;&gt;&gt;&gt;&gt;&gt;" .</pre></div>
+      <div class="step"><h4>Test that it still works</h4><p>Open the page or run the tests before you continue.</p></div>
+      <div class="step"><h4>Mark as resolved</h4><p><code>git add</code> tells Git this file is now fixed.</p>
+<pre class="code" data-lang="sh">git add index.html</pre></div>
+      <div class="step"><h4>Finish the operation</h4><p>Use the command that matches what you were doing.</p>
+<pre class="code" data-lang="sh"># merge or pull
+git commit
+# rebase
+git rebase --continue
+# cherry-pick / revert
+git cherry-pick --continue
+git revert --continue</pre></div>
+    </div>
+    <div class="callout danger"><span class="ci">⏏</span><div><b>Panic button:</b> <code>git merge --abort</code>, <code>git rebase --abort</code>, or <code>git cherry-pick --abort</code> returns everything to how it was before you started.</div></div>
+
+    <h3 class="sub">How to prevent conflicts</h3>
+    <div class="points four">
+      <div class="point"><div><h4>Pull often</h4><p>Merge main into your branch daily, not once at the end.</p></div></div>
+      <div class="point"><div><h4>Small, short-lived branches</h4><p>A branch that lives two days conflicts far less than one that lives two weeks.</p></div></div>
+      <div class="point"><div><h4>Talk about shared files</h4><p>Tell teammates before editing hot files like the navbar or global CSS.</p></div></div>
+      <div class="point"><div><h4>Same formatter for everyone</h4><p>Use Prettier with one config so formatting never creates fake conflicts.</p></div></div>
+    </div>
+    <div class="scn-grid" data-cat="conflict"></div><div class="empty" data-empty="conflict">No conflict scenario matches your search.</div>
+  </section>
+
+  <section class="sec" id="d3-trouble">
+    <div class="sec-head"><div class="kicker"><b>11</b> — Scenarios · errors &amp; edge cases</div><h2>Troubleshooting &amp; other situations</h2><p>The error messages everyone hits at least once, and exactly what to type.</p></div>
+    <div class="scn-grid" data-cat="trouble"></div><div class="empty" data-empty="trouble">No troubleshooting scenario matches your search.</div>
+  </section>
+
+  <section class="sec" id="d3-rare">
+    <div class="sec-head"><div class="kicker"><b>12</b> — Rare but must know</div><h2>Rare commands that save the day</h2></div>
+    <div class="grid g3">
+      <article class="card"><div class="top"><span class="cmd">git reflog</span><span class="pill p-rare">Lifesaver</span></div><p>A diary of everywhere HEAD has been, including "deleted" commits. Your ultimate undo button.</p></article>
+      <article class="card"><div class="top"><span class="cmd">git revert &lt;hash&gt;</span><span class="pill p-rare">Rare</span></div><p>Creates a new commit that reverses an old one. The safe undo for shared branches.</p></article>
+      <article class="card"><div class="top"><span class="cmd">git reset</span><span class="pill p-care">Careful</span></div><p>Moves the branch back in time with <code>--soft</code>, <code>--mixed</code>, or <code>--hard</code>. Never on pushed commits.</p></article>
+      <article class="card"><div class="top"><span class="cmd">git cherry-pick &lt;hash&gt;</span><span class="pill p-rare">Rare</span></div><p>Copies one specific commit from another branch onto yours.</p></article>
+      <article class="card"><div class="top"><span class="cmd">git rebase -i HEAD~3</span><span class="pill p-care">Careful</span></div><p>Edit the last N commits: reorder, squash, rename, or drop. Only on unpushed work.</p></article>
+      <article class="card"><div class="top"><span class="cmd">git bisect</span><span class="pill p-rare">Rare</span></div><p>Binary-searches history to find exactly which commit introduced a bug.</p></article>
+      <article class="card"><div class="top"><span class="cmd">git blame &lt;file&gt;</span><span class="pill p-rare">Rare</span></div><p>Shows who last changed each line and in which commit.</p></article>
+      <article class="card"><div class="top"><span class="cmd">git add -p</span><span class="pill p-rare">Rare</span></div><p>Stage changes chunk by chunk, so one messy file becomes clean focused commits.</p></article>
+      <article class="card"><div class="top"><span class="cmd">git log -S "text"</span><span class="pill p-rare">Rare</span></div><p>Finds commits that added or removed a specific piece of text.</p></article>
+      <article class="card"><div class="top"><span class="cmd">git show &lt;hash&gt;</span><span class="pill p-rare">Rare</span></div><p>Shows the message and full diff of one commit.</p></article>
+      <article class="card"><div class="top"><span class="cmd">git tag -a v1.0.0</span><span class="pill p-rare">Rare</span></div><p>Marks a commit as a release with a permanent, human-friendly name.</p></article>
+      <article class="card"><div class="top"><span class="cmd">git clean -fd</span><span class="pill p-danger">Destructive</span></div><p>Deletes untracked files and folders. Always preview with <code>-n</code> first.</p></article>
+      <article class="card"><div class="top"><span class="cmd">git commit --amend</span><span class="pill p-care">Careful</span></div><p>Replaces the last commit with a fixed version. Unpushed commits only.</p></article>
+      <article class="card"><div class="top"><span class="cmd">git worktree add</span><span class="pill p-rare">Rare</span></div><p>Checks out a second branch in another folder at the same time, without stashing.</p></article>
+      <article class="card"><div class="top"><span class="cmd">git shortlog -sn</span><span class="pill p-rare">Rare</span></div><p>Counts commits per author. Fun for team stats.</p></article>
+      <article class="card"><div class="top"><span class="cmd">git config rerere.enabled</span><span class="pill p-rare">Rare</span></div><p>"Reuse recorded resolution": Git remembers how you fixed a conflict and repeats it.</p></article>
+    </div>
+  </section>
+
+  <section class="sec" id="d3-ref">
+    <div class="sec-head"><div class="kicker"><b>13</b> — References</div><h2>Pointers &amp; shortcuts cheat sheet</h2></div>
+    <div class="grid g2">
+      <div class="tbl-wrap"><table style="min-width:0"><thead><tr><th>Reference</th><th>Points to</th></tr></thead><tbody>
+        <tr><td><code>HEAD</code></td><td>The commit you are on right now.</td></tr>
+        <tr><td><code>HEAD~1</code> / <code>HEAD^</code></td><td>One commit before HEAD.</td></tr>
+        <tr><td><code>HEAD~3</code></td><td>Three commits back.</td></tr>
+        <tr><td><code>HEAD@{1}</code></td><td>Where HEAD was one move ago (from reflog).</td></tr>
+        <tr><td><code>a1b2c3d</code></td><td>A specific commit by its short hash.</td></tr>
+        <tr><td><code>origin/main</code></td><td>Your last-fetched copy of the remote main.</td></tr>
+        <tr><td><code>main..feature</code></td><td>Commits in feature that main doesn't have.</td></tr>
+        <tr><td><code>-- file</code></td><td>"What follows is a file path, not a branch."</td></tr>
+      </tbody></table></div>
+      <div class="tbl-wrap"><table style="min-width:0"><thead><tr><th>Interactive rebase word</th><th>Effect on that commit</th></tr></thead><tbody>
+        <tr><td><code>pick</code></td><td>Keep it as is.</td></tr>
+        <tr><td><code>reword</code></td><td>Keep it, but edit the message.</td></tr>
+        <tr><td><code>edit</code></td><td>Stop here so you can change files.</td></tr>
+        <tr><td><code>squash</code></td><td>Merge into the previous commit, combining messages.</td></tr>
+        <tr><td><code>fixup</code></td><td>Merge into the previous commit, discarding this message.</td></tr>
+        <tr><td><code>drop</code></td><td>Delete the commit entirely.</td></tr>
+      </tbody></table></div>
+    </div>
+    <h3 class="sub">Branch naming convention</h3>
+    <div class="grid g4">
+      <article class="card"><span class="cmd">feature/login-form</span><p>New functionality.</p></article>
+      <article class="card"><span class="cmd">fix/navbar-overflow</span><p>Bug fixes.</p></article>
+      <article class="card"><span class="cmd">docs/readme-setup</span><p>Documentation only.</p></article>
+      <article class="card"><span class="cmd">chore/update-deps</span><p>Tooling and maintenance.</p></article>
+    </div>
+    <h3 class="sub">Starter <code>.gitignore</code></h3>
+<pre class="code" data-lang="plain" data-title=".gitignore"># dependencies
+node_modules/
+# secrets
+.env
+.env.local
+# build output
+dist/
+build/
+# OS / editor junk
+.DS_Store
+Thumbs.db
+.vscode/*
+!.vscode/extensions.json
+# logs
+*.log</pre>
+  </section>
+</section>
+
+<!-- ================================================================ DAY 4 -->
+<section class="day" id="day4" data-day="4" hidden>
+  <div class="soon-wrap">
+    <div>
+      <svg viewBox="0 0 400 400" role="img" aria-label="A locked glowing portal">
+        <defs>
+          <linearGradient id="ring" x1="0" x2="1" y1="0" y2="1"><stop offset="0" stop-color="#98E8DE"/><stop offset=".5" stop-color="#A66CFF"/><stop offset="1" stop-color="#FFECCB"/></linearGradient>
+          <radialGradient id="portal"><stop offset="0" stop-color="#A66CFF" stop-opacity=".55"/><stop offset=".7" stop-color="#00105B" stop-opacity=".8"/><stop offset="1" stop-color="#00105B" stop-opacity="0"/></radialGradient>
+        </defs>
+        <circle cx="200" cy="200" r="150" fill="url(#portal)"/>
+        <circle class="spin" cx="200" cy="200" r="168" fill="none" stroke="#98E8DE" stroke-opacity=".5" stroke-dasharray="2 10"/>
+        <circle class="spin-r" cx="200" cy="200" r="140" fill="none" stroke="url(#ring)" stroke-width="3" stroke-dasharray="80 30 20 30" filter="url(#glow)"/>
+        <circle class="spin" cx="200" cy="200" r="112" fill="none" stroke="#A66CFF" stroke-opacity=".6" stroke-dasharray="1 6"/>
+        <g class="spin"><circle cx="200" cy="32" r="6" fill="#FFECCB" filter="url(#glow)"/></g>
+        <g class="spin-r"><circle cx="340" cy="200" r="4" fill="#98E8DE" filter="url(#glow)"/></g>
+        <g class="float-a">
+          <path d="M176 196 V174 a24 24 0 0 1 48 0 V196" fill="none" stroke="#FFECCB" stroke-width="10" stroke-linecap="round"/>
+          <rect x="160" y="192" width="80" height="64" rx="14" fill="#FFECCB"/>
+          <circle cx="200" cy="218" r="8" fill="#00105B"/><rect x="196" y="220" width="8" height="18" rx="3" fill="#00105B"/>
+        </g>
+      </svg>
+      <div class="eyebrow" style="margin-top:6px"><span class="dot"></span>Day 04 · Locked</div>
+      <h1>Coming <span class="grad">soon</span></h1>
+      <p class="lead">This chapter is still being prepared. Master Markdown, the CLI, and Git first, because Day 4 builds on all three.</p>
+      <div class="chips" style="justify-content:center"><a href="#day1" class="tab" style="display:inline-block"><b>Review Day 1</b></a><a href="#day2" class="tab" style="display:inline-block"><b>Review Day 2</b></a><a href="#day3" class="tab" style="display:inline-block"><b>Review Day 3</b></a></div>
+    </div>
+  </div>
+</section>
+</main>
+
+<footer>Module 1 · Developer Foundations — Markdown, CLI, Git</footer>
+<button class="totop" id="totop" aria-label="Back to top"><svg width="22" height="22"><use href="#i-up"/></svg></button>
+
+<script>
+/* ===================================================== GIT SCENARIOS DATA */
+const SCN = [
+/* ---------------- SOLO ---------------- */
+{c:'solo',t:'Start a brand-new project',w:'You have a folder of code and want Git to track it from now on.',k:`cd my-project
+git init
+git add .
+git commit -m "chore: initial commit"`,n:'git init creates a hidden .git folder. Delete that folder and the whole history is gone.'},
+{c:'solo',t:'Put a local project on GitHub (first push)',w:'Create an EMPTY repo on GitHub (no README), then connect and push.',k:`git remote add origin git@github.com:<you>/my-project.git
+git branch -M main
+git push -u origin main`,n:'-u remembers the upstream, so from now on a plain git push is enough.'},
+{c:'solo',t:'Start from an existing GitHub repo',w:'The repo already exists online and you want it on your laptop.',k:`git clone git@github.com:<you>/my-project.git
+cd my-project
+git log --oneline`},
+{c:'solo',t:'Daily save loop',w:'The rhythm you repeat many times a day.',k:`git status
+git add index.html style.css
+git commit -m "feat: add hero section"
+git push`},
+{c:'solo',t:'Review changes before committing',w:'Check exactly what you are about to save.',k:`# unstaged changes
+git diff
+# staged changes (what will be committed)
+git diff --staged
+# stage only some parts of a file
+git add -p index.html`,n:'Reviewing the diff catches leftover console.log lines and secrets before they enter history.'},
+{c:'solo',t:'Commit everything that is already tracked',w:'A shortcut that stages modified tracked files and commits in one step.',k:`git commit -am "fix: typo in footer"`,v:'warn',n:'-a skips NEW untracked files. Run git add for those first.'},
+{c:'solo',t:'Experiment safely on a branch',w:'Try an idea without touching your working main branch.',k:`git switch -c experiment/dark-mode
+# ...edit & commit...
+git switch main
+# keep it:
+git merge experiment/dark-mode
+git branch -d experiment/dark-mode
+# or throw it away:
+git branch -D experiment/dark-mode`},
+{c:'solo',t:'Ignore files with .gitignore',w:'Keep dependencies, secrets, and build output out of Git.',k:`echo "node_modules/" >> .gitignore
+echo ".env" >> .gitignore
+git add .gitignore
+git commit -m "chore: add gitignore"`,n:'Create .gitignore BEFORE the first commit. It only affects files that are not tracked yet.'},
+{c:'solo',t:'Stop tracking a file that was already committed',w:'You committed node_modules or .env before adding it to .gitignore.',k:`git rm -r --cached node_modules
+echo "node_modules/" >> .gitignore
+git commit -m "chore: stop tracking node_modules"`,n:'--cached removes it from Git only. The files stay on your disk.'},
+{c:'solo',t:'Sync between two computers',w:'You code on a laptop at campus and a PC at home.',k:`# start of every session
+git pull
+# ...work & commit...
+# end of every session
+git push`,n:'Forgetting to push at the end is the #1 cause of "my changes are missing" on the other machine.'},
+{c:'solo',t:'Read the history',w:'See what happened, when, and by whom.',k:`git log --oneline --graph --all
+git show a1b2c3d
+# history of one file
+git log -p -- style.css
+# filter by author or date
+git log --author="Sam" --since="1 week ago"`},
+{c:'solo',t:'Rename or move a file',w:'Let Git record it as a rename instead of delete + add.',k:`git mv about.html about-me.html
+git commit -m "refactor: rename about page"`},
+{c:'solo',t:'Delete a tracked file',w:'Remove a file from disk and from the next commit in one step.',k:`git rm old-script.js
+git commit -m "chore: remove unused script"`},
+{c:'solo',t:'Compare two branches or commits',w:'See what differs before merging.',k:`git diff main..feature/login
+git log main..feature/login --oneline
+git diff a1b2c3d e4f5g6h -- index.html`},
+{c:'solo',t:'Tag a milestone or release',w:'Mark the commit you submitted or deployed.',k:`git tag -a v1.0.0 -m "Assignment 1 submission"
+git push origin v1.0.0
+git tag`},
+
+/* ---------------- UNDO ---------------- */
+{c:'undo',t:'Discard edits in a file (not staged)',w:'You broke a file and want it back to the last commit.',k:`git restore index.html
+# every file in the folder
+git restore .`,v:'danger',b:'danger',n:'Uncommitted edits are deleted permanently. There is no reflog for them.'},
+{c:'undo',t:'Unstage a file',w:'You ran git add on something you don\'t want in this commit.',k:`git restore --staged secret.txt`,b:'safe',n:'The file content is untouched; it just leaves the staging area.'},
+{c:'undo',t:'Unstage everything after "git add ."',w:'You staged too much and want to choose again.',k:`git restore --staged .`,b:'safe'},
+{c:'undo',t:'Fix the last commit message',w:'Typo in the message, not pushed yet.',k:`git commit --amend -m "fix: correct navbar alignment"`,b:'care',n:'Already pushed? Leave it, or amend and use git push --force-with-lease only on your own branch.'},
+{c:'undo',t:'Add a forgotten file to the last commit',w:'You committed but left one file behind.',k:`git add forgotten.css
+git commit --amend --no-edit`,b:'care'},
+{c:'undo',t:'Undo last commit, keep changes staged',w:'You want to redo the commit differently.',k:`git reset --soft HEAD~1`,b:'care',n:'Your changes stay staged, ready to commit again.'},
+{c:'undo',t:'Undo last commit, keep changes as edits',w:'You want to re-pick which files go into the commit.',k:`git reset HEAD~1
+# same as: git reset --mixed HEAD~1`,b:'care'},
+{c:'undo',t:'Delete the last commit and its changes',w:'The whole commit was a mistake and you never want it.',k:`git reset --hard HEAD~1`,v:'danger',b:'danger',n:'Committed work can still be recovered via reflog. Uncommitted work is lost.'},
+{c:'undo',t:'Undo a commit that is already pushed',w:'The bad commit is on GitHub and teammates may have it.',k:`git log --oneline
+git revert a1b2c3d
+git push`,b:'safe',n:'Revert adds a new "opposite" commit, so nobody\'s history breaks.'},
+{c:'undo',t:'Undo a pushed merge',w:'A merged PR broke main.',k:`git revert -m 1 <merge-hash>
+git push`,b:'safe',n:'-m 1 means "keep the main-line parent", so the merged branch\'s changes are reversed.'},
+{c:'undo',t:'Restore one file from an older commit',w:'style.css was perfect three commits ago.',k:`git log --oneline -- style.css
+git restore --source=a1b2c3d style.css
+git commit -am "fix: restore previous styles"`,b:'safe'},
+{c:'undo',t:'Bring back a deleted file',w:'You deleted a file and want it back.',k:`# deletion not committed yet
+git restore deleted.js
+# deletion already committed: find that commit
+git log --diff-filter=D --oneline -- deleted.js
+git restore --source=<hash>~1 deleted.js`,b:'safe',n:'<hash>~1 means "the commit just before the deletion".'},
+{c:'undo',t:'Time-travel to look at an old version',w:'See how the project looked last week without changing anything.',k:`git switch --detach a1b2c3d
+# ...look around, run it...
+git switch main`,b:'safe',n:'You will be in "detached HEAD". That is fine for looking.'},
+{c:'undo',t:'Rescue commits after a bad reset',w:'You ran reset --hard and your commits "disappeared".',k:`git reflog
+# find the line before the reset, e.g. HEAD@{2}
+git reset --hard HEAD@{2}
+# or save it on a new branch
+git branch rescue a1b2c3d`,b:'safe',n:'Reflog keeps about 90 days of local moves. It is local only, not on GitHub.'},
+{c:'undo',t:'Recover a deleted branch',w:'You ran git branch -D too early.',k:`git reflog
+git branch feature/login <hash>`,b:'safe'},
+{c:'undo',t:'Committed on main but meant a new branch',w:'Your commits should live on a feature branch (not pushed yet).',k:`git branch feature/login
+git reset --hard origin/main
+git switch feature/login`,b:'care',n:'The new branch keeps your commits, then main goes back to match the remote.'},
+{c:'undo',t:'Committed on the wrong existing branch',w:'Move one commit to the branch where it belongs.',k:`git switch correct-branch
+git cherry-pick a1b2c3d
+git switch wrong-branch
+git reset --hard HEAD~1`,b:'care'},
+{c:'undo',t:'Undo an amend',w:'You amended but wanted the original commit back.',k:`git reset --soft HEAD@{1}`,b:'care'},
+{c:'undo',t:'Squash messy commits before pushing',w:'Turn "wip", "wip2", "fix" into one clean commit.',k:`git reset --soft HEAD~3
+git commit -m "feat: complete login form"
+# or interactively
+git rebase -i HEAD~3`,b:'care'},
+{c:'undo',t:'Make your branch identical to the remote',w:'Your local branch is a mess and you just want GitHub\'s version.',k:`git branch backup/before-reset
+git fetch origin
+git reset --hard origin/main`,v:'danger',b:'danger',n:'Local unpushed commits and edits are wiped. The backup branch keeps commits just in case.'},
+{c:'undo',t:'Remove untracked junk files',w:'Generated files clutter your folder.',k:`# preview first!
+git clean -n
+git clean -fd
+# include ignored files too
+git clean -fdx`,v:'danger',b:'danger',n:'Untracked files never entered Git, so they cannot be recovered.'},
+{c:'undo',t:'Park unfinished work (stash)',w:'You need to switch tasks but are not ready to commit.',k:`git stash push -u -m "wip navbar"
+git switch main
+# ...later...
+git switch feature/navbar
+git stash list
+git stash pop`,b:'safe',n:'-u also stashes untracked files. Use git stash apply stash@{1} to pick a specific one.'},
+{c:'undo',t:'Cancel an operation in progress',w:'A merge, rebase, or cherry-pick got messy and you want out.',k:`git merge --abort
+git rebase --abort
+git cherry-pick --abort
+git revert --abort`,b:'safe'},
+{c:'undo',t:'Undo a pushed commit on your own branch',w:'Nobody else uses this branch and you want history clean.',k:`git reset --hard HEAD~1
+git push --force-with-lease`,b:'care',n:'Never do this on main or a shared branch. Use revert there.'},
+{c:'undo',t:'Pushed a password or API key',w:'A secret is now in the public history.',k:`# 1. revoke / rotate the key at the provider NOW
+# 2. stop tracking it
+git rm --cached .env
+echo ".env" >> .gitignore
+git commit -m "chore: remove env file"
+# 3. purge it from history (separate tool)
+git filter-repo --path .env --invert-paths
+git push --force-with-lease`,v:'danger',b:'danger',n:'Step 1 is the only one that truly protects you. Bots scan GitHub for keys within minutes.'},
+
+/* ---------------- TEAM ---------------- */
+{c:'team',t:'Join an existing team project',w:'First day on a repo your team already uses.',k:`git clone git@github.com:team/project.git
+cd project
+npm install
+git switch -c feature/my-first-task`},
+{c:'team',t:'Start every task from fresh main',w:'Avoid building on top of old code.',k:`git switch main
+git pull
+git switch -c fix/footer-links`},
+{c:'team',t:'Push a branch and open a Pull Request',w:'Your task is ready for review.',k:`git push -u origin fix/footer-links
+gh pr create --fill`,n:'Without the gh CLI, open GitHub and click "Compare & pull request".'},
+{c:'team',t:'Address review feedback',w:'A reviewer asked for changes on your PR.',k:`# edit files
+git add .
+git commit -m "fix: address review comments"
+git push`,n:'No new PR needed. The existing PR updates itself.'},
+{c:'team',t:'Push rejected: "fetch first" / non-fast-forward',w:'Someone pushed to the same branch before you.',k:`git pull --rebase
+git push`,v:'warn',n:'Never "fix" this with --force on a shared branch; you would delete their work.'},
+{c:'team',t:'Update your branch with latest main (merge)',w:'Main moved forward while you worked.',k:`git switch feature/login
+git fetch origin
+git merge origin/main
+git push`,b:'safe'},
+{c:'team',t:'Update your branch with latest main (rebase)',w:'Same goal, but you want a linear history.',k:`git fetch origin
+git rebase origin/main
+git push --force-with-lease`,b:'care',n:'Only on a branch that is yours alone.'},
+{c:'team',t:'Test a teammate\'s branch',w:'You want to run their PR locally.',k:`git fetch origin
+git switch fix/navbar
+# or with GitHub CLI
+gh pr checkout 13`,n:'git switch auto-creates a local branch tracking origin/fix/navbar.'},
+{c:'team',t:'Two people pushing to the same branch',w:'Pair-programming or shared feature branch.',k:`git config --global pull.rebase true
+# before every push
+git pull
+git push`,n:'Rebase-pulls keep the log free of "Merge branch ..." noise.'},
+{c:'team',t:'Clean up after the PR is merged',w:'Delete branches you no longer need.',k:`git switch main
+git pull
+git branch -d feature/login
+git push origin --delete feature/login
+git fetch --prune`,n:'--prune removes local references to remote branches that were deleted on GitHub.'},
+{c:'team',t:'Contribute to someone else\'s repo (fork)',w:'You don\'t have write access, e.g. open source.',k:`# 1. click Fork on GitHub, then:
+git clone git@github.com:<you>/project.git
+cd project
+git remote add upstream git@github.com:owner/project.git
+git switch -c fix/typo
+# ...commit...
+git push -u origin fix/typo
+# 2. open a PR from your fork to upstream`},
+{c:'team',t:'Keep your fork up to date',w:'The original repo has new commits.',k:`git switch main
+git fetch upstream
+git merge upstream/main
+git push origin main`},
+{c:'team',t:'Take one commit from another branch',w:'A teammate fixed a bug on their branch and you need it now.',k:`git log --oneline origin/fix/navbar
+git cherry-pick a1b2c3d`},
+{c:'team',t:'Teammate force-pushed the branch you have',w:'git pull now shows weird conflicts or errors.',k:`git branch backup/login
+git fetch origin
+git reset --hard origin/feature/login`,b:'care',n:'Only if you have no local work to keep; the backup branch protects you.'},
+{c:'team',t:'Can\'t push to main (protected branch)',w:'"remote: error: GH006: Protected branch update failed".',k:`git switch -c feature/my-change
+git push -u origin feature/my-change
+# then open a PR`,n:'This is intentional. Teams require reviews before code reaches main.'},
+{c:'team',t:'Rename a branch',w:'You picked a bad name like "test2".',k:`git branch -m test2 feature/search
+git push -u origin feature/search
+git push origin --delete test2`},
+{c:'team',t:'Find who changed a line and why',w:'Something looks odd and you need context.',k:`git blame -L 10,20 index.html
+git log -p -S "navbar" -- index.html`,n:'GitLens in VS Code shows this inline as you move the cursor.'},
+{c:'team',t:'Preview what teammates pushed before merging',w:'See new remote commits without touching your files.',k:`git fetch
+git log main..origin/main --oneline
+git diff main origin/main`},
+{c:'team',t:'Mark a release for the team',w:'The sprint is done and deployed.',k:`git switch main
+git pull
+git tag -a v1.2.0 -m "Sprint 3 release"
+git push origin --tags`},
+
+/* ---------------- CONFLICT ---------------- */
+{c:'conflict',t:'Conflict while merging a branch',w:'git merge prints CONFLICT (content).',k:`git merge feature/greeting
+# CONFLICT (content): Merge conflict in index.html
+git status
+# edit index.html, remove markers
+git add index.html
+git commit`},
+{c:'conflict',t:'Conflict while pulling',w:'Your local commits and the remote commits touch the same lines.',k:`git pull
+# CONFLICT ... fix the files
+git add .
+git commit
+git push`,n:'If pull.rebase is true, finish with git rebase --continue instead of commit.'},
+{c:'conflict',t:'Conflict during a rebase',w:'Rebase stops at each commit that conflicts.',k:`git rebase origin/main
+# fix the files
+git add index.html
+git rebase --continue
+# skip this commit entirely
+git rebase --skip
+# give up and go back
+git rebase --abort`,v:'warn',n:'During rebase "ours" = main and "theirs" = your commit. It is the opposite of a merge.'},
+{c:'conflict',t:'Conflict after git stash pop',w:'Your stash and the new commits changed the same lines.',k:`git stash pop
+# CONFLICT ... fix the files
+git add index.html
+git stash drop`,n:'On conflict the stash is NOT removed automatically, so drop it after resolving.'},
+{c:'conflict',t:'Conflict during cherry-pick',w:'The copied commit doesn\'t apply cleanly.',k:`git cherry-pick a1b2c3d
+# fix the files
+git add .
+git cherry-pick --continue`},
+{c:'conflict',t:'Modify / delete conflict',w:'"deleted by them": one side deleted the file, the other edited it.',k:`# keep the file (with your edits)
+git add about.html
+# or accept the deletion
+git rm about.html
+git commit`},
+{c:'conflict',t:'Both added the same file',w:'"both added": two people created config.js independently.',k:`# open config.js, merge both versions by hand
+git add config.js
+git commit`},
+{c:'conflict',t:'Take one whole side quickly',w:'You know one version is entirely correct.',k:`# keep YOUR branch's version
+git checkout --ours index.html
+# keep the INCOMING branch's version
+git checkout --theirs index.html
+git add index.html`,n:'git restore --ours / --theirs does the same in newer Git.'},
+{c:'conflict',t:'Conflict in package-lock.json',w:'Lock files conflict constantly and are generated, not hand-written.',k:`git checkout --theirs package-lock.json
+npm install
+git add package-lock.json
+git commit`,n:'Never hand-edit lock files. Take one side and let npm regenerate it.'},
+{c:'conflict',t:'Conflict in an image or binary file',w:'Git can\'t show markers inside a PNG.',k:`git checkout --theirs assets/logo.png
+git add assets/logo.png`},
+{c:'conflict',t:'GitHub says "This branch has conflicts"',w:'Your PR can\'t be merged in the browser.',k:`git switch feature/login
+git fetch origin
+git merge origin/main
+# resolve, then
+git add .
+git commit
+git push`,n:'The PR turns green automatically after you push.'},
+{c:'conflict',t:'Resolved a file wrong, start that file over',w:'You mangled the merge and want the markers back.',k:`git checkout -m index.html`,n:'Recreates the original conflict markers for that file only.'},
+{c:'conflict',t:'Understand who changed what in a conflict',w:'You need context before choosing.',k:`git log --merge --oneline
+git diff
+git show :2:index.html   # ours
+git show :3:index.html   # theirs`},
+{c:'conflict',t:'Same conflict keeps coming back',w:'You resolve the same lines again and again during rebases.',k:`git config --global rerere.enabled true`,n:'Git records your resolution once and replays it automatically next time.'},
+
+/* ---------------- TROUBLE ---------------- */
+{c:'trouble',t:'"You are in detached HEAD state"',w:'You checked out a commit or tag instead of a branch.',k:`# keep work you did here
+git switch -c rescue/my-work
+# or just leave
+git switch main`,n:'Commits made in detached HEAD get lost unless you put a branch on them.'},
+{c:'trouble',t:'"fatal: not a git repository"',w:'You are in the wrong folder or never ran init.',k:`pwd
+cd ~/projects/my-project
+# or start tracking here
+git init`},
+{c:'trouble',t:'"refusing to merge unrelated histories"',w:'You created a README on GitHub AND ran git init locally.',k:`git pull origin main --allow-unrelated-histories
+git push -u origin main`},
+{c:'trouble',t:'"src refspec main does not match any"',w:'Push failed because there are no commits yet or your branch is called master.',k:`git status
+git add .
+git commit -m "chore: initial commit"
+git branch -M main
+git push -u origin main`},
+{c:'trouble',t:'"Authentication failed" / password not supported',w:'GitHub removed password login for Git operations.',k:`# option A: GitHub CLI
+gh auth login
+# option B: SSH
+git remote set-url origin git@github.com:<you>/repo.git
+ssh -T git@github.com`,n:'With HTTPS, paste a Personal Access Token where Git asks for a password.'},
+{c:'trouble',t:'"Permission denied (publickey)"',w:'Your SSH key is missing or not added to GitHub.',k:`ls ~/.ssh
+ssh-keygen -t ed25519 -C "you@example.com"
+cat ~/.ssh/id_ed25519.pub
+# add it on GitHub → Settings → SSH keys
+ssh -T git@github.com`},
+{c:'trouble',t:'Wrong name or email on commits',w:'Commits don\'t show your GitHub avatar.',k:`git config --global user.email "you@example.com"
+# fix the last commit
+git commit --amend --reset-author --no-edit`,n:'The email must match one listed in your GitHub settings.'},
+{c:'trouble',t:'Ran git init in the wrong folder',w:'Suddenly your whole home folder shows as a repo.',k:`pwd
+# make sure you are in the wrong folder, then
+rm -rf .git`,v:'danger',b:'danger',n:'This removes only Git tracking, not your files. Double-check the folder first.'},
+{c:'trouble',t:'Folder shows as an unclickable arrow on GitHub',w:'A nested .git inside a subfolder made it a "submodule".',k:`rm -rf inner-folder/.git
+git rm --cached inner-folder
+git add inner-folder
+git commit -m "fix: track inner folder files"`},
+{c:'trouble',t:'"LF will be replaced by CRLF" warnings',w:'Windows and Mac use different line endings.',k:`# Windows
+git config --global core.autocrlf true
+# Mac / Linux
+git config --global core.autocrlf input
+# best: add a .gitattributes file
+echo "* text=auto" > .gitattributes`,n:'It is a warning, not an error. The settings make it consistent.'},
+{c:'trouble',t:'File too large (>100 MB) rejected',w:'GitHub blocks huge files like videos or zips.',k:`git rm --cached big-video.mp4
+echo "*.mp4" >> .gitignore
+git commit --amend --no-edit
+# for real large assets use Git LFS
+git lfs install
+git lfs track "*.psd"`,v:'warn',n:'If the big file is in older commits too, it must be removed from history (git filter-repo).'},
+{c:'trouble',t:'Rename a file by letter case only',w:'navbar.js → Navbar.js does not show up on Windows/Mac.',k:`git mv navbar.js Navbar.js
+git commit -m "refactor: rename Navbar component"`},
+{c:'trouble',t:'Repo renamed or switch HTTPS ↔ SSH',w:'Push goes to the old URL or asks for a password.',k:`git remote -v
+git remote set-url origin git@github.com:<you>/new-name.git`},
+{c:'trouble',t:'Stuck in Vim after commit or merge',w:'A strange editor opened and you can\'t exit.',k:`# save and close
+Esc  then  :wq  then Enter
+# quit without saving
+Esc  then  :q!  then Enter
+# use VS Code next time
+git config --global core.editor "code --wait"`},
+{c:'trouble',t:'"Your branch and origin/main have diverged"',w:'Both you and the remote have new commits.',k:`git pull --rebase
+# resolve conflicts if any
+git push`},
+{c:'trouble',t:'"You have divergent branches and need to specify how to reconcile"',w:'Newer Git asks you to choose a pull strategy once.',k:`# merge (default, beginner friendly)
+git config --global pull.rebase false
+# or rebase
+git config --global pull.rebase true`},
+{c:'trouble',t:'"Your local changes would be overwritten by checkout"',w:'You try to switch branches with uncommitted edits.',k:`git stash
+git switch other-branch
+# later, back on your branch
+git stash pop`,n:'Or simply commit first. Git protects you from losing edits.'},
+{c:'trouble',t:'.gitignore is not working',w:'The file is still showing in git status.',k:`git check-ignore -v .env
+git rm --cached .env
+git commit -m "chore: stop tracking .env"`,n:'.gitignore never affects files that are already tracked.'},
+{c:'trouble',t:'Empty folder doesn\'t appear on GitHub',w:'Git tracks files, not folders.',k:`touch assets/.gitkeep
+git add assets/.gitkeep
+git commit -m "chore: keep assets folder"`},
+{c:'trouble',t:'Find which commit introduced a bug',w:'It worked in v1.0.0 but is broken now.',k:`git bisect start
+git bisect bad
+git bisect good v1.0.0
+# Git checks out a middle commit: test it, then
+git bisect good   # or: git bisect bad
+# repeat until Git names the culprit
+git bisect reset`},
+{c:'trouble',t:'Find when some code was removed',w:'A function vanished and you want it back.',k:`git log -S "calculateTotal" --oneline
+git show <hash>`},
+{c:'trouble',t:'Work on two branches at the same time',w:'Hotfix needed while your feature is half-done.',k:`git worktree add ../project-hotfix fix/urgent
+cd ../project-hotfix
+# ...fix, commit, push...
+cd ../project
+git worktree remove ../project-hotfix`},
+{c:'trouble',t:'Huge repo: clone faster or one branch only',w:'Cloning takes forever.',k:`git clone --depth 1 git@github.com:team/project.git
+git clone -b dev --single-branch git@github.com:team/project.git`},
+{c:'trouble',t:'Old repo still uses master',w:'Switch to main locally and on GitHub.',k:`git branch -m master main
+git push -u origin main
+# change default branch in GitHub Settings, then
+git push origin --delete master`}
+];
+</script>
+<script>
+(function(){
+  document.documentElement.classList.add('js');
+  const $=(s,r=document)=>r.querySelector(s), $$=(s,r=document)=>Array.from(r.querySelectorAll(s));
+  const esc=s=>s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+
+  /* ---------- highlighters ---------- */
+  function hlSh(src){
+    return src.split('\n').map(line=>{
+      if(/^\s*#/.test(line)) return '<span class="t-c">'+esc(line)+'</span>';
+      const re=/("[^"]*"|'[^']*'|<[A-Za-z][^>\s]*>|\s+#\s.*$|^\s*(?:git|gh|npm|npx|ssh|ssh-keygen)\s+[a-z][\w-]*|^\s*[\w.\/~-]+|(?:^|\s)--?[A-Za-z][\w-]*(?:=\S*)?)/g;
+      let out='',i=0,m;
+      while((m=re.exec(line))){
+        if(!m[0].length){re.lastIndex++;continue}
+        out+=esc(line.slice(i,m.index));
+        const tok=m[0], tr=tok.trimStart(), lead=tok.slice(0,tok.length-tr.length);
+        let cls='t-k';
+        if(tr[0]=='"'||tr[0]=="'") cls='t-s';
+        else if(tr[0]=='<') cls='t-p';
+        else if(tr[0]=='#') cls='t-c';
+        else if(tr[0]=='-') cls='t-f';
+        out+=esc(lead)+'<span class="'+cls+'">'+esc(tr)+'</span>';
+        i=re.lastIndex;
+      }
+      return out+esc(line.slice(i));
+    }).join('\n');
+  }
+  function hlMd(src){
+    return src.split('\n').map(line=>{
+      let h=esc(line);
+      if(/^#{1,6}\s/.test(line)) return '<span class="t-h">'+h+'</span>';
+      if(/^```/.test(line)) return '<span class="t-m">'+h+'</span>';
+      h=h.replace(/^(&gt;\s?(\[![A-Z]+\])?)/,'<span class="t-m">$1</span>')
+         .replace(/^(\s*)([-*]|\d+\.)(\s)/,'$1<span class="t-m">$2</span>$3')
+         .replace(/(\*\*[^*]+\*\*)/g,'<span class="t-b">$1</span>')
+         .replace(/(`[^`]+`)/g,'<span class="t-l">$1</span>')
+         .replace(/(!?\[[^\]]*\](?:\([^)]*\)|\[[^\]]*\])?)/g,'<span class="t-s">$1</span>')
+         .replace(/(&lt;!--.*?--&gt;)/g,'<span class="t-c">$1</span>')
+         .replace(/(&lt;\/?[a-z]+[^&]*?&gt;)/g,'<span class="t-q">$1</span>');
+      return h;
+    }).join('\n');
+  }
+  function hlPlain(src){
+    return src.split('\n').map(l=>/^\s*#/.test(l)?'<span class="t-c">'+esc(l)+'</span>':(/^!/.test(l)?'<span class="t-m">'+esc(l)+'</span>':esc(l))).join('\n');
+  }
+  function hlConflict(src){
+    let zone='';
+    return src.split('\n').map(l=>{
+      if(l.startsWith('<<<<<<<')){zone='cur';return '<span class="x-l x-cur"><span class="x-mk">'+esc(l)+'</span></span>'}
+      if(l.startsWith('=======')){zone='inc';return '<span class="x-l"><span class="x-mk">'+esc(l)+'</span></span>'}
+      if(l.startsWith('>>>>>>>')){zone='';return '<span class="x-l x-inc"><span class="x-mk">'+esc(l)+'</span></span>'}
+      return zone?'<span class="x-l x-'+zone+'">'+esc(l)+'</span>':esc(l);
+    }).join('\n');
+  }
+  const HL={sh:hlSh,md:hlMd,plain:hlPlain,conflict:hlConflict};
+  const TITLES={sh:'terminal',md:'markdown',plain:'text',conflict:'conflict'};
+  function codeHTML(src,lang,title){
+    return '<div class="cw"><div class="cw-bar"><i></i><i></i><i></i><span>'+esc(title||TITLES[lang]||lang)+'</span><button class="copy" type="button">Copy</button></div><pre data-lang="'+lang+'"><code>'+(HL[lang]||esc)(src)+'</code></pre></div>';
+  }
+
+  /* ---------- scenarios ---------- */
+  const PFX={solo:'S',undo:'U',team:'T',conflict:'C',trouble:'X'};
+  const BADGE={safe:['Safe','p-safe'],care:['Rewrites history','p-care'],danger:['Destructive','p-danger']};
+  const counters={};
+  SCN.forEach(s=>{
+    const grid=$('.scn-grid[data-cat="'+s.c+'"]'); if(!grid) return;
+    counters[s.c]=(counters[s.c]||0)+1;
+    const id=PFX[s.c]+String(counters[s.c]).padStart(2,'0');
+    const el=document.createElement('article');
+    el.className='scn'; el.dataset.cat=s.c;
+    el.dataset.text=(id+' '+s.t+' '+s.w+' '+s.k+' '+(s.n||'')+' '+s.c).toLowerCase();
+    const b=s.b&&BADGE[s.b]?'<span class="pill '+BADGE[s.b][1]+'">'+BADGE[s.b][0]+'</span>':'';
+    el.innerHTML='<header><span class="scn-id">'+id+'</span><h4>'+esc(s.t)+'</h4>'+b+'</header>'+
+      '<p class="scn-w">'+esc(s.w)+'</p>'+codeHTML(s.k,'sh')+
+      (s.n?'<p class="scn-n '+(s.v||'')+'">'+esc(s.n)+'</p>':'');
+    grid.appendChild(el);
+  });
+  Object.keys(counters).forEach(c=>{const b=$('[data-count="'+c+'"]'); if(b) b.textContent=counters[c]});
+  const tot=$('#scnTotal'); if(tot) tot.textContent=SCN.length+' scenarios';
+
+  /* ---------- static code blocks ---------- */
+  $$('pre.code, pre.code-raw').forEach(p=>{
+    const lang=p.dataset.lang||'sh';
+    const src=p.textContent.replace(/^\n/,'').replace(/\s+$/,'');
+    if(p.classList.contains('code-raw')){
+      p.className=''; p.innerHTML='<code>'+(HL[lang]||esc)(src)+'</code>';
+      p.style.cssText='margin:0;padding:14px 16px;overflow-x:auto;font:13px/1.7 var(--font-m);color:#E6E8FF';
+      return;
+    }
+    const w=document.createElement('div'); w.innerHTML=codeHTML(src,lang,p.dataset.title);
+    p.replaceWith(w.firstElementChild);
+  });
+
+  /* ---------- copy ---------- */
+  document.addEventListener('click',e=>{
+    const btn=e.target.closest('.copy'); if(!btn) return;
+    const pre=btn.closest('.cw').querySelector('pre');
+    let txt=pre.textContent;
+    if(pre.dataset.lang==='sh') txt=txt.split('\n').filter(l=>!/^\s*#/.test(l)).join('\n');
+    const done=()=>{btn.textContent='Copied';btn.classList.add('ok');setTimeout(()=>{btn.textContent='Copy';btn.classList.remove('ok')},1400)};
+    if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(txt).then(done,fallback)}else fallback();
+    function fallback(){const t=document.createElement('textarea');t.value=txt;document.body.appendChild(t);t.select();try{document.execCommand('copy')}catch(_){}t.remove();done()}
+  });
+
+  /* ---------- search ---------- */
+  const input=$('#gitSearch'), found=$('#found');
+  function filter(){
+    const words=(input.value||'').toLowerCase().trim().split(/\s+/).filter(Boolean);
+    let shown=0; const per={};
+    $$('.scn').forEach(el=>{
+      const ok=words.every(w=>el.dataset.text.includes(w));
+      el.hidden=!ok; if(ok){shown++;per[el.dataset.cat]=(per[el.dataset.cat]||0)+1}
+    });
+    Object.keys(PFX).forEach(c=>{
+      const e=$('[data-empty="'+c+'"]'); if(e) e.classList.toggle('show',words.length>0&&!per[c]);
+      const b=$('[data-count="'+c+'"]'); if(b) b.textContent=words.length?(per[c]||0):(counters[c]||0);
+    });
+    found.textContent=words.length?(shown+' of '+SCN.length+' scenarios match "'+input.value.trim()+'"'):'';
+  }
+  if(input) input.addEventListener('input',filter);
+
+  /* ---------- keys (Win / Mac) ---------- */
+  function renderKeys(os){
+    $$('.keys').forEach(k=>{
+      const v=k.dataset[os]||k.dataset.win||'';
+      k.innerHTML=v.split(' ').map(ch=>ch.split(/\+(?!$)/).map(x=>'<kbd>'+esc(x)+'</kbd>').join('<i>+</i>')).join('<em>then</em>');
+    });
+    $$('.os button').forEach(b=>b.classList.toggle('on',b.dataset.os===os));
+  }
+  let os='win';
+  try{os=localStorage.getItem('m1-os')||(/Mac|iPhone|iPad/.test(navigator.platform)?'mac':'win')}catch(_){}
+  renderKeys(os);
+  $$('.os button').forEach(b=>b.addEventListener('click',()=>{os=b.dataset.os;renderKeys(os);try{localStorage.setItem('m1-os',os)}catch(_){}}));
+  // special: some "then" keys are really alternatives (e.g. "Ctrl+F Ctrl+H"); label them nicer
+  $$('.kb .keys').forEach(k=>{ if(/Find|Undo|Previous|Move line|Cursor above|Copy \/ paste|Jump to start/.test(k.parentElement.textContent)) k.dataset.alt='1'; });
+  function fixAlt(){ $$('.keys[data-alt] em').forEach(e=>e.textContent='/'); }
+  fixAlt(); $$('.os button').forEach(b=>b.addEventListener('click',fixAlt));
+
+  /* ---------- routing ---------- */
+  let current=null;
+  function showDay(n,anchor){
+    n=String(n);
+    if(current!==n){
+      $$('.day').forEach(d=>d.hidden=d.dataset.day!==n);
+      $$('.tab[data-day]').forEach(t=>t.classList.toggle('active',t.dataset.day===n));
+      current=n;
+      if(!anchor) window.scrollTo({top:0,behavior:'auto'});
+      observe();
+    }
+    if(anchor){const el=document.getElementById(anchor); if(el) setTimeout(()=>el.scrollIntoView({block:'start'}),0)}
+    spy();
+  }
+  document.addEventListener('click',e=>{
+    const a=e.target.closest('a[href^="#"]'); if(!a||e.ctrlKey||e.metaKey) return;
+    e.preventDefault();
+    const h=a.getAttribute('href');
+    try{history.pushState(null,'',h)}catch(_){}
+    route(h.slice(1));
+  });
+  function route(hash){
+    let h=hash; if(h==null){try{h=decodeURIComponent(location.hash.slice(1))}catch(_){h=''}}
+    h=h||'day1';
+    const m=h.match(/^day(\d)$/); if(m) return showDay(m[1]);
+    const el=document.getElementById(h);
+    const d=el&&el.closest('.day');
+    if(d) showDay(d.dataset.day,h); else showDay('1');
+  }
+  window.addEventListener('hashchange',()=>route());
+  window.addEventListener('popstate',()=>route());
+
+  /* ---------- reveal ---------- */
+  let io=null;
+  function observe(){
+    if(!('IntersectionObserver' in window)){ $$('.rv').forEach(e=>e.classList.add('in')); return; }
+    if(!io) io=new IntersectionObserver(es=>es.forEach(en=>{if(en.isIntersecting){en.target.classList.add('in');io.unobserve(en.target)}}),{rootMargin:'0px 0px -6% 0px'});
+    $$('.day:not([hidden]) .rv:not(.in)').forEach(e=>io.observe(e));
+  }
+  $$('.card,.scn,.point,.figure,.tbl-wrap,.md-pair,.step,.kb,.mode,.flow,.finder,.callout').forEach(e=>e.classList.add('rv'));
+
+  /* ---------- scroll spy, progress, top ---------- */
+  const prog=$('#progress'), top=$('#totop');
+  function spy(){
+    const day=$('.day:not([hidden])'); if(!day) return;
+    const links=$$('.subnav a',day); let active=null;
+    links.forEach(a=>{const t=document.getElementById(a.getAttribute('href').slice(1)); if(t&&t.getBoundingClientRect().top<200) active=a});
+    links.forEach(a=>a.classList.toggle('on',a===active));
+    if(active){const nav=active.parentElement; const l=active.offsetLeft-nav.clientWidth/2+active.clientWidth/2; if(Math.abs(nav.scrollLeft-l)>40) nav.scrollTo({left:l,behavior:'smooth'})}
+    const st=window.scrollY, max=document.documentElement.scrollHeight-innerHeight;
+    prog.style.width=(max>0?st/max*100:0)+'%';
+    top.classList.toggle('show',st>900);
+  }
+  let tick=false;
+  window.addEventListener('scroll',()=>{if(!tick){tick=true;requestAnimationFrame(()=>{spy();tick=false})}},{passive:true});
+  top.addEventListener('click',()=>window.scrollTo({top:0,behavior:'smooth'}));
+
+  route();
+  window.__go=route;
+})();
+</script>
+</body>
+</html>
